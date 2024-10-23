@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DjostAspNetCoreWebServer", "DjostAspNetCoreWebServer\DjostAspNetCoreWebServer.csproj", "{B36C6C94-84A1-4694-A819-735BDF5A6F0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppServiceCore", "AppServiceCore\AppServiceCore.csproj", "{6439C01C-6B92-4753-BA95-4E8E65F3B418}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherLibrary", "WeatherLibrary\WeatherLibrary.csproj", "{E6AE6F0E-D4C0-4EC9-980F-4CF7860314F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DjostAspNetCoreWebServerTests", "DjostAspNetCoreWebServerTests\DjostAspNetCoreWebServerTests.csproj", "{BEA8A9FD-6BE5-4FD2-9B4D-B6DD749B3DA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGorillaLibrary", "TestGorillaLibrary\TestGorillaLibrary.csproj", "{B42C1E91-B740-481B-A32D-B723F9D9B730}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{513458FC-807C-4E4C-A871-9043ADCDFE42}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAiChatCompletions", "OpenAiChatCompletions\OpenAiChatCompletions.csproj", "{FC36F80A-5E0C-4E85-8C8C-AF8FB79E0130}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B36C6C94-84A1-4694-A819-735BDF5A6F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B36C6C94-84A1-4694-A819-735BDF5A6F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B36C6C94-84A1-4694-A819-735BDF5A6F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B36C6C94-84A1-4694-A819-735BDF5A6F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6439C01C-6B92-4753-BA95-4E8E65F3B418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6439C01C-6B92-4753-BA95-4E8E65F3B418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6439C01C-6B92-4753-BA95-4E8E65F3B418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6439C01C-6B92-4753-BA95-4E8E65F3B418}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6AE6F0E-D4C0-4EC9-980F-4CF7860314F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6AE6F0E-D4C0-4EC9-980F-4CF7860314F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6AE6F0E-D4C0-4EC9-980F-4CF7860314F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6AE6F0E-D4C0-4EC9-980F-4CF7860314F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEA8A9FD-6BE5-4FD2-9B4D-B6DD749B3DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEA8A9FD-6BE5-4FD2-9B4D-B6DD749B3DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEA8A9FD-6BE5-4FD2-9B4D-B6DD749B3DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEA8A9FD-6BE5-4FD2-9B4D-B6DD749B3DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42C1E91-B740-481B-A32D-B723F9D9B730}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42C1E91-B740-481B-A32D-B723F9D9B730}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42C1E91-B740-481B-A32D-B723F9D9B730}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42C1E91-B740-481B-A32D-B723F9D9B730}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC36F80A-5E0C-4E85-8C8C-AF8FB79E0130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC36F80A-5E0C-4E85-8C8C-AF8FB79E0130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC36F80A-5E0C-4E85-8C8C-AF8FB79E0130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC36F80A-5E0C-4E85-8C8C-AF8FB79E0130}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90D99C51-10C0-467C-A97F-AC9E99AA4559}
+	EndGlobalSection
+EndGlobal
