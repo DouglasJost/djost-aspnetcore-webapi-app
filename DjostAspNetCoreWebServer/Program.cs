@@ -16,12 +16,7 @@ namespace DjostAspNetCoreWebServer
             // Add services to the DI container
             //
             // See extension method ServiceCollectionExtensions.AddServicesWithDefaultConventions for implementation.
-            builder.Services.AddServicesWithDefaultConventions(
-                Assembly.GetExecutingAssembly(),
-                Assembly.Load("AppServiceCore"),
-                Assembly.Load("WeatherLibrary"),
-                Assembly.Load("TestGorillaLibrary"),
-                Assembly.Load("OpenAiChatCompletions"));
+            builder.Services.AddServicesWithDefaultConventions();
 
             // Add services to the container.
             builder.Services.AddControllers()
