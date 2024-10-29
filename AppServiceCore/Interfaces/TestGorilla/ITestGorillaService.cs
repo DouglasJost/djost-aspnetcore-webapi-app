@@ -1,0 +1,30 @@
+﻿using AppServiceCore.Models.TestGorilla;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AppServiceCore.Interfaces.TestGorilla
+{
+    public interface ITestGorillaService
+    {
+        CommandResult<ReverseStringResponseDto> ReverseString(ReverseStringRequestDto request);
+
+        CommandResult<ContainsOnlyDigitsResponseDto> ArrayContainsOnlyDigits(ContainsOnlyDigitsRequestDto request);
+
+        CommandResult<DuplicateNumberResponseDto> FindDuplicateNumber(DuplicateNumberRequestDto request);
+
+        CommandResult<DuplicateNumbersResponseDto> FindDuplicateNumbers(DuplicateNumbersRequestDto request);
+
+        CommandResult<RemoveDuplicateNumbersResponseDto> RemoveDuplicateNumbers(RemoveDuplicateNumbersRequestDto request);
+
+        CommandResult<RemoveDuplicateNumbersResponseDto> RemoveDuplicateNumbersNoLibraries(RemoveDuplicateNumbersRequestDto request);
+
+        CommandResult<MinMaxNumbersResponseDto> FindMinMaxNumber(MinMaxNumbersRequestDto request);
+
+        CommandResult<RemoveSpecialCharactersResponseDto> RemoveSpecialCharacters(RemoveSpecialCharactersRequestDto sentence);
+
+        CommandResult<IpAddressValidationResponseDto> IsValidIpAddress(IpAddressValidationRequestDto request);
+    }
+}

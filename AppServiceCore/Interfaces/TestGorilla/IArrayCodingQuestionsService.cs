@@ -1,0 +1,28 @@
+﻿using AppServiceCore.Models.TestGorilla;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AppServiceCore.Interfaces.TestGorilla
+{
+    public interface IArrayCodingQuestionsService
+    {
+        string ReverseString(string str);
+
+        bool ArrayContainsOnlyDigits(char[] chars);
+
+        int? FindDuplicateNumber(int[] numbers);
+
+        List<int> FindDuplicateNumbers(int[] numbers);
+
+        List<int> RemoveDuplicateNumbers(int[] numbers);
+
+        List<int> RemoveDuplicateNumbersNoLibraries(int[] numbers);
+
+        (int MinNumber, int MaxNumber) FindMinMaxNumber(int[] numbers);
+
+        void FindMinMaxNumber(int[] numbers, out int? minNumber, out int? maxNumber);
+    }
+}

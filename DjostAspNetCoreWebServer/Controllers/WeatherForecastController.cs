@@ -9,7 +9,7 @@ using System.Linq;
 namespace DjostAspNetCoreWebServer.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]   
+    [Route("api/v1/[controller]")]   
     // Defines base URL segment for the controller.
     // Auto replace name of the controller class, excluding the "Controller" suffix.
     public class WeatherForecastController : ControllerBase

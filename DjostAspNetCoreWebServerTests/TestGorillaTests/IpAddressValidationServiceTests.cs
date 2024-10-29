@@ -27,12 +27,8 @@ namespace DjostAspNetCoreWebServerTests.TestGorillaTests
         [TestCase("10.0.0.0")]
         public void IsValidIpAddress_ShouldReturnSuccess_WithValidRequest(string ipAddress)
         {
-            var request = new IpAddressValidationRequestDto { IpAddress = ipAddress };
-            var response = _ipAddressValidationService.IsValidIpAddress(request);
-            Assert.That(response, Is.Not.Null);
-            Assert.That(response.IsSuccess, Is.True);
-            Assert.That(response.Value.IsValidAddress, Is.True);
-            Assert.That(response.Value.IpAddress, Is.EqualTo(ipAddress));
+            var isValid = _ipAddressValidationService.IsValidIpAddress(ipAddress);
+            Assert.That(isValid, Is.True);
         }
 
         [Test]
@@ -42,12 +38,8 @@ namespace DjostAspNetCoreWebServerTests.TestGorillaTests
         [TestCase("192.168.1.001")]
         public void IsValidIpAddress_ShouldReturnFailure_WithInvalidRequest(string ipAddress)
         {
-            var request = new IpAddressValidationRequestDto { IpAddress = ipAddress };
-            var response = _ipAddressValidationService.IsValidIpAddress(request);
-            Assert.That(response, Is.Not.Null);
-            Assert.That(response.IsSuccess, Is.True);
-            Assert.That(response.Value.IsValidAddress, Is.False);
-            Assert.That(response.Value.IpAddress, Is.EqualTo(ipAddress));
+            var isValid = _ipAddressValidationService.IsValidIpAddress(ipAddress);
+            Assert.That(isValid, Is.False);
         }
     }
 }

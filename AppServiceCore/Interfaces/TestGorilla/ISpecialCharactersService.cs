@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace AppServiceCore.Interfaces.TestGorilla
 {
-    public interface IIpAddressValidationService
+    public interface ISpecialCharactersService
     {
-        bool IsValidIpAddress(string ipAddress);
+        (string SentenceWithoutSpecialCharacters, string RemovedSpecialCharacters) RemoveSpecialCharacters(string sentence);
     }
 }

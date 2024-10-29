@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DjostAspNetCoreWebServer.Controllers.OpenAiChatCompletions
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
 
     public class OpenAiChatCompletionsController : ControllerBase
     {
