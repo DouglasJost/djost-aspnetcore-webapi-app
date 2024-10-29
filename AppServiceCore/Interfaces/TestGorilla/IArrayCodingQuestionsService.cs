@@ -24,5 +24,11 @@ namespace AppServiceCore.Interfaces.TestGorilla
         (int MinNumber, int MaxNumber) FindMinMaxNumber(int[] numbers);
 
         void FindMinMaxNumber(int[] numbers, out int? minNumber, out int? maxNumber);
+
+        (int lessCnt, int equalCnt, int greaterCnt) CountLessThanEqualToGreaterThanCompareValue(int compareVal, int[] numbers);
+
+        string ConvertFrom12To24HoursFormat(string inputTime);
+
+        string FormatAlphabetAlternatingCase(bool UppercaseFirst);
     }
 }

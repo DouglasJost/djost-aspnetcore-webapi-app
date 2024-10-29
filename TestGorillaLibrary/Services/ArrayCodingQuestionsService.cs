@@ -183,5 +183,119 @@ namespace TestGorillaLibrary.Services
                 }
             }
         }
+
+
+        /*
+            You are given:
+
+            val1: an integer
+            arr : list of integers
+
+            Write a function that takes the array arr, its size n, and the integer val1 as input
+            and returns an array containing the count of integers that are smaller than, equal to,
+            and greater than val1, respectively.
+        */
+        public (int lessCnt, int equalCnt, int greaterCnt) CountLessThanEqualToGreaterThanCompareValue(int compareVal, int[] numbers)
+        {
+            int lessCnt = 0;
+            int equalCnt = 0;
+            int greaterCnt = 0;
+
+            foreach (var number in numbers)
+            {
+                if (compareVal < number)
+                {
+                    lessCnt++;
+                }
+                else if (compareVal == number)
+                {
+                    equalCnt++;
+                }
+                else
+                {
+                     greaterCnt++;
+                }
+            }
+
+            return (lessCnt, equalCnt, greaterCnt);
+        }
+
+        public string ConvertFrom12To24HoursFormat(string inputTime)
+        {
+            /*
+                Using .NET and C#, you need to convert the time from 12 hours format to 24 hours format.
+
+                Assume the skeleton class TimeConvertor is given.  You need to implement the function
+                ConvertFrom12To24HoursFormat(string inputTime).  This function parses the given input
+                string (inputTime in 12 hours format) and converts the time to 24 hours format.
+
+                The TimeConvertor class takes a string (InputTime in 12 hours format) and calls the 
+                ConvertFrom12To24HoursFormat function to convert the time to 24 hours format.
+
+                Two examples:
+                  Input: inputTime = 12:00 am
+                  Output: 0:00
+
+                  Input: inputTime = 1:05 pm
+                  Output: 13:05
+            */
+
+            var time = inputTime.Trim().ToUpper();
+            var indexAM = time.IndexOf("AM");
+            var indexPM = time.IndexOf("PM");
+
+            time = time.Replace("AM", string.Empty);
+            time = time.Replace("PM", string.Empty);
+
+            var timeParts = time.Split(':');
+            var hours = int.Parse(timeParts[0]);   // Convert to an int.  May need to do MATH.
+            var minutes = timeParts[1];            // Leave as a string.  If converted to an int, will format "05" as "5".
+
+
+            if (indexAM > -1)
+            {
+                if (hours == 12)
+                {
+                    hours = 0;
+                }
+            }
+            else
+            {
+                if (hours != 12)
+                {
+                    hours = hours + 12;
+                }
+            }
+
+            return $"{hours}:{minutes}";
+        }
+
+        public string FormatAlphabetAlternatingCase(bool isFirstCharUpper)
+        {
+            // Uppercase alphabets in ASCII range from 65 ('A') to 90 ('Z')
+            // Lowercase alphabets in ASCII range from 97 ('a') to 122 ('z')
+
+            var alphabet = new StringBuilder();
+
+            for (int i = 0; i < 26; i++)
+            {
+                var baseAsciiCode = 65;
+                if (isFirstCharUpper)
+                {
+                    baseAsciiCode = i % 2 == 0 ? 65 : 97;
+                }
+                else
+                {
+                    baseAsciiCode = i % 2 == 0 ? 97 : 65;
+                }
+
+                // Calculate current character's ASCII by adding 1 and adjusting case
+                var letter = (char)(baseAsciiCode + i);
+
+                alphabet.AppendFormat($"{letter}");
+            }
+
+            return alphabet.ToString();
+        }
     }
 }

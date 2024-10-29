@@ -101,5 +101,29 @@ namespace DjostAspNetCoreWebServer.Controllers.TestGorilla
             var result = _testGorillaService.IsValidIpAddress(request);
             return Ok(result);
         }
+
+        [Route("CountLessThanEqualToGreaterThanCompareValue")]
+        [HttpPost]
+        public IActionResult CountLessThanEqualToGreaterThanCompareValue([FromBody] CompareNumberToValueRequestDto request)
+        {
+            var result = _testGorillaService.CountLessThanEqualToGreaterThanCompareValue(request);
+            return Ok(result);
+        }
+
+        [Route("ConvertFrom12To24HoursFormat")]
+        [HttpPost]
+        public IActionResult ConvertFrom12To24HoursFormat(ConvertTimeFormatRequestDto request)
+        {
+            var result = _testGorillaService.ConvertFrom12To24HoursFormat(request);
+            return Ok(result);
+        }
+
+        [Route("FormatAlphabetAlternatingCase")]
+        [HttpPost]
+        public IActionResult FormatAlphabetAlternatingCase(FormatAlphabetAlternatingCaseRequestDto request)
+        {
+            var result = _testGorillaService.FormatAlphabetAlternatingCase(request);
+            return Ok(result);
+        }
     }
 }

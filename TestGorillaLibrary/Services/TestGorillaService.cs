@@ -17,7 +17,7 @@ namespace TestGorillaLibrary.Services
         private readonly IIpAddressValidationService _ipAddressValidationService;
 
         public TestGorillaService(
-            IArrayCodingQuestionsService arrayCodingQuestionsService, 
+            IArrayCodingQuestionsService arrayCodingQuestionsService,
             ISpecialCharactersService specialCharactersService,
             IIpAddressValidationService ipAddressValidationService)
         {
@@ -48,7 +48,7 @@ namespace TestGorillaLibrary.Services
             {
                 return CommandResult<ReverseStringResponseDto>.Failure(ExceptionUtilities.AppendExceptionMessages(ex));
             }
-            
+
             return CommandResult<ReverseStringResponseDto>.Success(response);
         }
 
@@ -201,7 +201,7 @@ namespace TestGorillaLibrary.Services
             {
                 var result = _arrayCodingQuestionsService.FindMinMaxNumber(numbers);
                 response.MaxNumber = result.MaxNumber;
-                response.MinNumber = result.MinNumber;  
+                response.MinNumber = result.MinNumber;
             }
             catch (Exception ex)
             {
@@ -256,7 +256,7 @@ namespace TestGorillaLibrary.Services
 
             try
             {
-                response.IsValidAddress = _ipAddressValidationService.IsValidIpAddress(ipAddress);            
+                response.IsValidAddress = _ipAddressValidationService.IsValidIpAddress(ipAddress);
             }
             catch (Exception ex)
             {
@@ -264,6 +264,86 @@ namespace TestGorillaLibrary.Services
             }
 
             return CommandResult<IpAddressValidationResponseDto>.Success(response);
+        }
+
+        public CommandResult<CompareNumberToValueResponseDto> CountLessThanEqualToGreaterThanCompareValue(CompareNumberToValueRequestDto request)
+        {
+            var compareValue = request.CompareValue;
+            var numbers = request.Numbers;
+
+            if (compareValue == null || numbers == null || numbers.Length <= 0)
+            {
+                return CommandResult<CompareNumberToValueResponseDto>.Failure("Numbers array and CompareValue cannot be null or empty.");
+            }
+
+            var response = new CompareNumberToValueResponseDto
+            {
+                CompareValue = compareValue,
+                Numbers = numbers,
+                LessThanCount = 0,
+                EqualToCount = 0,
+                GreaterThanCount = 0,
+            };
+
+            try
+            {
+                var result = _arrayCodingQuestionsService.CountLessThanEqualToGreaterThanCompareValue(compareValue.Value, numbers);
+                response.LessThanCount = result.lessCnt;
+                response.EqualToCount = result.equalCnt;
+                response.GreaterThanCount = result.greaterCnt;
+            }
+            catch (Exception ex)
+            {
+                return CommandResult<CompareNumberToValueResponseDto>.Failure(ExceptionUtilities.AppendExceptionMessages(ex));
+            }
+
+            return CommandResult<CompareNumberToValueResponseDto>.Success(response);
+        }
+
+        public CommandResult<ConvertTimeFormResponseDto> ConvertFrom12To24HoursFormat(ConvertTimeFormatRequestDto request)
+        {
+            var time12Format = request.InputTime;
+            if (string.IsNullOrEmpty(time12Format))
+            {
+                return CommandResult<ConvertTimeFormResponseDto>.Failure("Input time cannot be null or empty.");
+            }
+
+            var response = new ConvertTimeFormResponseDto
+            {
+                InputTime = time12Format,
+                OutputTime = string.Empty,
+            };
+
+            try
+            {
+                response.OutputTime = _arrayCodingQuestionsService.ConvertFrom12To24HoursFormat(time12Format);
+            }
+            catch (Exception ex)
+            {
+                return CommandResult<ConvertTimeFormResponseDto>.Failure(ExceptionUtilities.AppendExceptionMessages(ex));
+            }
+
+            return CommandResult<ConvertTimeFormResponseDto>.Success(response);
+        }
+
+        public CommandResult<FormatAlphabetAlternatingCaseResponseDto> FormatAlphabetAlternatingCase(FormatAlphabetAlternatingCaseRequestDto request)
+        {
+            var response = new FormatAlphabetAlternatingCaseResponseDto
+            {
+                IsFirstCharUpper = request.IsFirstCharUpper,
+                Alphabet = string.Empty,
+            };
+
+            try
+            {
+                response.Alphabet = _arrayCodingQuestionsService.FormatAlphabetAlternatingCase(request.IsFirstCharUpper);
+            }
+            catch (Exception ex)
+            {
+                return CommandResult<FormatAlphabetAlternatingCaseResponseDto>.Failure(ExceptionUtilities.AppendExceptionMessages(ex));
+            }
+
+            return CommandResult<FormatAlphabetAlternatingCaseResponseDto>.Success(response);
         }
     }
 }

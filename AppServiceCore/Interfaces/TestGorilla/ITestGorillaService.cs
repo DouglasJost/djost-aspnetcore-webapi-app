@@ -26,5 +26,11 @@ namespace AppServiceCore.Interfaces.TestGorilla
         CommandResult<RemoveSpecialCharactersResponseDto> RemoveSpecialCharacters(RemoveSpecialCharactersRequestDto sentence);
 
         CommandResult<IpAddressValidationResponseDto> IsValidIpAddress(IpAddressValidationRequestDto request);
+
+        CommandResult<CompareNumberToValueResponseDto> CountLessThanEqualToGreaterThanCompareValue(CompareNumberToValueRequestDto request);
+
+        CommandResult<ConvertTimeFormResponseDto> ConvertFrom12To24HoursFormat(ConvertTimeFormatRequestDto request);
+
+        CommandResult<FormatAlphabetAlternatingCaseResponseDto> FormatAlphabetAlternatingCase(FormatAlphabetAlternatingCaseRequestDto request);
     }
 }
