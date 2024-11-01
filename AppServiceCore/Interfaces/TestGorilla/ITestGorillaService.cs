@@ -9,6 +9,8 @@ namespace AppServiceCore.Interfaces.TestGorilla
 {
     public interface ITestGorillaService
     {
+        CommandResult<ToTileCaseResponseDto> ToTitleCase(ToTitleCaseRequestDto request);
+
         CommandResult<ReverseStringResponseDto> ReverseString(ReverseStringRequestDto request);
 
         CommandResult<ContainsOnlyDigitsResponseDto> ArrayContainsOnlyDigits(ContainsOnlyDigitsRequestDto request);

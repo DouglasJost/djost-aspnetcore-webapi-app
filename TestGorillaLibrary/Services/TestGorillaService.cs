@@ -26,6 +26,39 @@ namespace TestGorillaLibrary.Services
             _ipAddressValidationService = ipAddressValidationService;
         }
 
+        public CommandResult<ToTileCaseResponseDto> ToTitleCase(ToTitleCaseRequestDto request)
+        {
+            var response = new ToTileCaseResponseDto
+            {
+                Title = request.Title,
+                TitleCased = string.Empty,
+            };
+
+            if (string.IsNullOrEmpty(request.Title))
+            {
+                response.TitleCased = string.Empty;
+                return CommandResult<ToTileCaseResponseDto>.Success(response);
+            }
+
+            var newStr = new StringBuilder();
+            var words = request.Title.Trim().Split(' ');
+            for (var i = 0; i < words.Length; i++)
+            {
+                if (string.IsNullOrEmpty(words[i].Trim()))
+                {
+                    continue;
+                }
+                words[i] = words[i].Substring(0, 1).ToUpper() + words[i].Substring(1).ToLower();
+                newStr.Append($" {words[i]}");
+            }
+
+            var titledCaseString = newStr.ToString().Trim();
+
+            response.TitleCased = request.Title.ToTitleCase();
+            return CommandResult<ToTileCaseResponseDto>.Success(response);
+        }
+
+
         public CommandResult<ReverseStringResponseDto> ReverseString(ReverseStringRequestDto request)
         {
             var originalString = request.Request;

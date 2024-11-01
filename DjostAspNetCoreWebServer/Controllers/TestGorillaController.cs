@@ -30,6 +30,15 @@ namespace DjostAspNetCoreWebServer.Controllers.TestGorilla
             _testGorillaService = testGorillaService;
         }
 
+        [Route("ToTitleCase")]
+        [HttpPost]
+        public IActionResult ToTitleCase([FromBody] ToTitleCaseRequestDto request)
+        {
+            var response = _testGorillaService.ToTitleCase(request);
+            return Ok(response);
+        }
+
+
         [Route("ReverseString")]
         [HttpPost]
         public IActionResult ReverseString([FromBody] ReverseStringRequestDto request)
