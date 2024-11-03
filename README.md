@@ -12,6 +12,6 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Added AppServiceCore library that includes the various interfaces and DTO models that are used by the application.  It also implements the CommandResult object that is returned by the respective endpoints to the caller.
 
-* Added several class libraries that implement quiz questions that I found on various tech interview sites.  Currently, active in adding to these libraries.
+* Added assessment library.
 
 * Adding NUnit tests for the various class libraries that are included in this application.
