@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherLibrary", "WeatherLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DjostAspNetCoreWebServerTests", "DjostAspNetCoreWebServerTests\DjostAspNetCoreWebServerTests.csproj", "{BEA8A9FD-6BE5-4FD2-9B4D-B6DD749B3DA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGorillaLibrary", "TestGorillaLibrary\TestGorillaLibrary.csproj", "{B42C1E91-B740-481B-A32D-B723F9D9B730}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssessmentSuiteLibrary", "AssessmentSuiteLibrary\AssessmentSuiteLibrary.csproj", "{B42C1E91-B740-481B-A32D-B723F9D9B730}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{513458FC-807C-4E4C-A871-9043ADCDFE42}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAiChatCompletions", "OpenAiChatCompletions\OpenAiChatCompletions.csproj", "{FC36F80A-5E0C-4E85-8C8C-AF8FB79E0130}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingLotLibrary", "ParkingLotLibrary\ParkingLotLibrary.csproj", "{7F46CEDB-5615-4031-AA5D-88E65B0611F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkingLotLibrary", "ParkingLotLibrary\ParkingLotLibrary.csproj", "{7F46CEDB-5615-4031-AA5D-88E65B0611F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

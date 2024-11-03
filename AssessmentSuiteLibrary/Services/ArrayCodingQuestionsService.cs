@@ -1,6 +1,6 @@
 ﻿using AppServiceCore;
-using AppServiceCore.Interfaces.TestGorilla;
-using AppServiceCore.Models.TestGorilla;
+using AppServiceCore.Interfaces.AssessmentSuite;
+using AppServiceCore.Models.AssessmentSuite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestGorillaLibrary.Services
+namespace AssessmentSuiteLibrary.Services
 {
     public class ArrayCodingQuestionsService : IArrayCodingQuestionsService
     {

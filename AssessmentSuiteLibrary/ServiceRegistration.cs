@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestGorillaLibrary
+namespace AssessmentSuiteLibrary
 {
     public static class ServiceRegistration
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestGorillaLibrary.Services;
+using AssessmentSuiteLibrary.Services;
 
-namespace DjostAspNetCoreWebServerTests.TestGorillaTests
+namespace DjostAspNetCoreWebServerTests.AssessmentSuiteTests
 {
     [TestFixture]
     public class ArrayCodingQuestionsTests

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppServiceCore;
-using AppServiceCore.Models.TestGorilla;
+using AppServiceCore.Models.AssessmentSuite;
 using OpenAiChatCompletions.Models.ChatCompletion;
 using OpenAiChatCompletions.Models.MedicalVisitNote;
 

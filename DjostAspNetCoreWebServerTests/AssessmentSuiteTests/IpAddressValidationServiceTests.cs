@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestGorillaLibrary.Services;
-using AppServiceCore.Models.TestGorilla;
-using AppServiceCore.Interfaces.TestGorilla;
+using AssessmentSuiteLibrary.Services;
+using AppServiceCore.Models.AssessmentSuite;
+using AppServiceCore.Interfaces.AssessmentSuite;
 using WeatherLibrary.Services.WeatherForecast;
 
-namespace DjostAspNetCoreWebServerTests.TestGorillaTests
+namespace DjostAspNetCoreWebServerTests.AssessmentSuiteTests
 {
     [TestFixture]
     public class IpAddressValidationServiceTests

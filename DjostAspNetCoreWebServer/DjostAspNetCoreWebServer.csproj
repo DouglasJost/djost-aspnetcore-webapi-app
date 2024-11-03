@@ -16,7 +16,7 @@
     <ProjectReference Include="..\AppServiceCore\AppServiceCore.csproj" />
     <ProjectReference Include="..\OpenAiChatCompletions\OpenAiChatCompletions.csproj" />
     <ProjectReference Include="..\ParkingLotLibrary\ParkingLotLibrary.csproj" />
-    <ProjectReference Include="..\TestGorillaLibrary\TestGorillaLibrary.csproj" />
+    <ProjectReference Include="..\AssessmentSuiteLibrary\AssessmentSuiteLibrary.csproj" />
     <ProjectReference Include="..\WeatherLibrary\WeatherLibrary.csproj" />
   </ItemGroup>
 

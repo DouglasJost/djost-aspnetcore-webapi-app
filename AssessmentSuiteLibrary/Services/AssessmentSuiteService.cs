@@ -1,6 +1,6 @@
 ﻿using AppServiceCore;
-using AppServiceCore.Interfaces.TestGorilla;
-using AppServiceCore.Models.TestGorilla;
+using AppServiceCore.Interfaces.AssessmentSuite;
+using AppServiceCore.Models.AssessmentSuite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +8,15 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestGorillaLibrary.Services
+namespace AssessmentSuiteLibrary.Services
 {
-    public class TestGorillaService : ITestGorillaService
+    public class AssessmentSuiteService : IAssessmentSuiteService
     {
         private readonly IArrayCodingQuestionsService _arrayCodingQuestionsService;
         private readonly ISpecialCharactersService _specialCharactersService;
         private readonly IIpAddressValidationService _ipAddressValidationService;
 
-        public TestGorillaService(
+        public AssessmentSuiteService(
             IArrayCodingQuestionsService arrayCodingQuestionsService,
             ISpecialCharactersService specialCharactersService,
             IIpAddressValidationService ipAddressValidationService)

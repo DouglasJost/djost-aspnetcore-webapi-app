@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppServiceCore\AppServiceCore.csproj" />
-    <ProjectReference Include="..\TestGorillaLibrary\TestGorillaLibrary.csproj" />
+    <ProjectReference Include="..\AssessmentSuiteLibrary\AssessmentSuiteLibrary.csproj" />
     <ProjectReference Include="..\WeatherLibrary\WeatherLibrary.csproj" />
   </ItemGroup>
 

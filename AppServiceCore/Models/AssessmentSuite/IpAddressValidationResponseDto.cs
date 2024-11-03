@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServiceCore.Models.TestGorilla
+namespace AppServiceCore.Models.AssessmentSuite
 {
-    public class IpAddressValidationRequestDto
+    public class IpAddressValidationResponseDto
     {
         public string IpAddress { get; set; }
+        public bool IsValidAddress { get; set; }
     }
 }
