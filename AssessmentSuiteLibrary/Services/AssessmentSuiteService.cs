@@ -1,6 +1,7 @@
 ﻿using AppServiceCore;
 using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,47 @@ namespace AssessmentSuiteLibrary.Services
         private readonly IArrayCodingQuestionsService _arrayCodingQuestionsService;
         private readonly ISpecialCharactersService _specialCharactersService;
         private readonly IIpAddressValidationService _ipAddressValidationService;
+        private readonly ILogger<AssessmentSuiteService> _logger;
+
+        // private readonly Singleton _singleton;
+        private Singleton? _singleton;
 
         public AssessmentSuiteService(
             IArrayCodingQuestionsService arrayCodingQuestionsService,
             ISpecialCharactersService specialCharactersService,
-            IIpAddressValidationService ipAddressValidationService)
+            IIpAddressValidationService ipAddressValidationService,
+            ILogger<AssessmentSuiteService> logger)
         {
             _arrayCodingQuestionsService = arrayCodingQuestionsService;
             _specialCharactersService = specialCharactersService;
             _ipAddressValidationService = ipAddressValidationService;
+            _logger = logger;
+
+            // _singleton = Singleton.GetSingletonInstance(_logger);
         }
+
+
+        public CommandResult<string> SingletonUseCase()
+        {
+            var response = string.Empty;
+
+            try
+            {
+                _singleton = Singleton.GetSingletonInstance(_logger);
+
+                // Let catch block handle the case if _singleton is null, which should not happen.
+                _singleton.LogMessage("SingletonUseCase() method called.");
+
+                response = "SingletonUseCase() method called.";
+            }
+            catch (Exception ex)
+            {
+                return CommandResult<string>.Failure(ExceptionUtilities.AppendExceptionMessages(ex));
+            }
+
+            return CommandResult<string>.Success(response);
+        }
+
 
         public CommandResult<ToTileCaseResponseDto> ToTitleCase(ToTitleCaseRequestDto request)
         {

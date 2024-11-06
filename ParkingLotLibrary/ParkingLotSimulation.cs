@@ -10,6 +10,7 @@ using ParkingLotLibrary.Models.Vehicles;
 using ParkingLotLibrary.Services;
 using ParkingLotLibrary.Models;
 using ParkingLotLibrary.Interfaces;
+using ParkingLotLibrary.Models.Enums;
 
 namespace ParkingLotLibrary
 {
@@ -33,9 +34,13 @@ namespace ParkingLotLibrary
                 response.SimulationResults.Add($"Is Full: {parkingLotService.IsFull()}");
                 response.SimulationResults.Add($"Is Empty: {parkingLotService.IsEmpty()}");
 
-                var motorcycle = new MotorCycle();
-                var car = new Car();
-                var van = new Van();
+                //var motorcycle = new MotorCycle();
+                //var car = new Car();
+                //var van = new Van();
+
+                var motorcycle = VehicleFactory.CreateVehicle(VehicleType.Motocycle);
+                var car = VehicleFactory.CreateVehicle(VehicleType.Car);
+                var van = VehicleFactory.CreateVehicle(VehicleType.Van);
 
                 parkingLotService.ParkVehicle(motorcycle);
                 response.SimulationResults.Add($"Parked a motorcycle.");

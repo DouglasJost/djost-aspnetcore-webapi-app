@@ -9,6 +9,8 @@ namespace AppServiceCore.Interfaces.AssessmentSuite
 {
     public interface IAssessmentSuiteService
     {
+        CommandResult<string> SingletonUseCase();
+
         CommandResult<ToTileCaseResponseDto> ToTitleCase(ToTitleCaseRequestDto request);
 
         CommandResult<ReverseStringResponseDto> ReverseString(ReverseStringRequestDto request);

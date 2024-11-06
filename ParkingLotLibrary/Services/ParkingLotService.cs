@@ -73,6 +73,11 @@ namespace ParkingLotLibrary.Services
 
         public bool ParkVehicle(Vehicle vehicle)
         {
+            //
+            // ParkVehicle is an example of the SOLID Liskov Substitution Principle (LSP).
+            //
+            // Using a subclass (child / derived class) whenever a Superclass (parent / Base Class) is expected.
+            //
             var parkedSuccessfully = false;
 
             var requiredSpots = vehicle.GetRequiredSpots();

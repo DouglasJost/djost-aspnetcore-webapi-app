@@ -30,6 +30,15 @@ namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
             _AssessmentSuiteService = AssessmentSuiteService;
         }
 
+        [Route("SingletonUseCase")]
+        [HttpGet]
+        public IActionResult SingletonUseCase()
+        {
+            var response = _AssessmentSuiteService.SingletonUseCase();
+            return Ok(response);
+        }
+
+
         [Route("ToTitleCase")]
         [HttpPost]
         public IActionResult ToTitleCase([FromBody] ToTitleCaseRequestDto request)

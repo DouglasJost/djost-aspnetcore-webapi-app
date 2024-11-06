@@ -12,4 +12,11 @@ namespace ParkingLotLibrary.Models.Enums
         Compact = 1,
         Large = 2,
     }
+
+    public enum VehicleType
+    {
+        Motocycle = 0,
+        Car = 1,
+        Van = 2,
+    }
 }
