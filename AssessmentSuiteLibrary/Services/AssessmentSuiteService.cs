@@ -44,7 +44,7 @@ namespace AssessmentSuiteLibrary.Services
             {
                 _singleton = Singleton.GetSingletonInstance(_logger);
 
-                // Let catch block handle the case if _singleton is null, which should not happen.
+                // Let catch block handle the case if _singleton is null
                 _singleton.LogMessage("SingletonUseCase() method called.");
 
                 response = "SingletonUseCase() method called.";
