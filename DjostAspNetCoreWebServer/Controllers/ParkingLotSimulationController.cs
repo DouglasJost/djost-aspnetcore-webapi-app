@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ParkingLotLibrary;
 using ParkingLotLibrary.Interfaces;
 
 namespace DjostAspNetCoreWebServer.Controllers

@@ -1,27 +1,23 @@
 ﻿using AppServiceCore;
 using AppServiceCore.Interfaces.WeatherForecast;
+using AppServiceCore.Logging;
 using AppServiceCore.Models.WeatherForecast;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WeatherLibrary.Services.WeatherForecast
 {
     public class WeatherForecastService : IWeatherForecastService
     {
-        private readonly ILogger<WeatherForecastService> _logger;
+        private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.WeatherLibrary);
 
         private static readonly string[] Summaries =
         [
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         ];
 
-        public WeatherForecastService(ILogger<WeatherForecastService> logger)
+        public WeatherForecastService()
         {
-            _logger = logger;
         }
 
         public CommandResult<WeatherForecastResponseDto> GetWeatherForecast(WeatherForecastRequestDto request)

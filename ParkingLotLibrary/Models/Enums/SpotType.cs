@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ParkingLotLibrary.Models.Enums
+﻿namespace ParkingLotLibrary.Models.Enums
 {
     public enum SpotType
     {

@@ -1,23 +1,139 @@
-﻿using AppServiceCore;
-using AppServiceCore.Interfaces.AssessmentSuite;
-using AppServiceCore.Models.AssessmentSuite;
+﻿using AppServiceCore.Interfaces.AssessmentSuite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AssessmentSuiteLibrary.Services
 {
     public class ArrayCodingQuestionsService : IArrayCodingQuestionsService
     {
+        /*
+             Open brackets must be closed in the correct order.
+        
+             Every close bracket has a corresponding open bracket of the same type.
+        
+             Example 1:
+             Input: s = "()"
+             Output: true
+        
+             Example 2:
+             Input: s = "()[({})]{}"
+             Output: true
+        
+             Example 3:
+             Input: s = "([)]"
+             Output: false
+        */
+        public bool AreBracketsBalanced(string testStr)
+        {
+            Stack<char> openBrackets = new System.Collections.Generic.Stack<char>();
+
+            Dictionary<char, char> bracketPairs = new Dictionary<char, char>
+            {
+                { ')', '(' },
+                { ']', '[' },
+                { '}', '{' }
+            };
+            
+            foreach(var chr in testStr)
+            {
+                if (chr == '(' || chr == '[' || chr == '{')
+                {
+                    // push opening bracket to stack
+                    openBrackets.Push(chr);
+                }
+                else if (chr == ')' || chr == ']' || chr == '}')
+                {
+                    // check if stack is empty or top of stack is not the closing bracket
+                    if (openBrackets.Count == 0 || openBrackets.Peek() != bracketPairs[chr])
+                    {
+                        return false;
+                    }
+                    openBrackets.Pop();
+                }
+            }
+
+            return (openBrackets.Count == 0);
+        }
+
+
+        /*
+            The given code snippet is supposed to remove all special characters from a string.  The only
+            characters allowed in the string are the 26 letters in the English alphabet(A to Z and a to z),
+            digits(0 to 9), spaces(), dashes(-) and underscores(_).  The function should return NA if
+            the string only contains special characters.
+
+            Uppercase alphabets in ASCII range from 65 ('A') to 90 ('Z')
+            Lowercase alphabets in ASCII range from 97 ('a') to 122 ('z')
+
+            Space       ( )  ASCII 32
+            Dash/Minus  (-)  ASCII 45
+            Underscore  (_)  ASCII 95
+            Integer Numbers from 48 (0) to 57 (9)
+        */
+        public (string SentenceWithoutSpecialCharacters, string RemovedSpecialCharacters) RemoveSpecialCharacters(string sentence)
+        {
+            var updatedSentence = new StringBuilder();
+            HashSet<char> specialCharsHash = new HashSet<char>();
+
+            for (int indx = 0; indx < sentence.Length; indx++)
+            {
+                var validCharacter = false;
+
+                if (sentence[indx] >= 65 && sentence[indx] <= 90)
+                {
+                    // char is upper case letter A .. Z
+                    validCharacter = true;
+                }
+                else if (sentence[indx] >= 97 && sentence[indx] <= 122)
+                {
+                    // char is lower case letter a .. z
+                    validCharacter = true;
+                }
+                else if (sentence[indx] >= 48 && sentence[indx] <= 57)
+                {
+                    // char is a number 0 .. 9
+                    validCharacter = true;
+                }
+                else if (sentence[indx] == 32)
+                {
+                    // space
+                    validCharacter = true;
+                }
+                else if (sentence[indx] == 45)
+                {
+                    // Dash or minus (-)
+                    validCharacter = true;
+                }
+                else if (sentence[indx] == 95)
+                {
+                    // underscore (_)
+                    validCharacter = true;
+                }
+
+                if (validCharacter)
+                {
+                    updatedSentence.AppendFormat("{0}", sentence[indx]);
+                }
+                else
+                {
+                    specialCharsHash.Add(sentence[indx]);
+                }
+            }
+
+            return (updatedSentence.ToString(), new string(specialCharsHash.ToArray()));
+        }
+
+
+        /*
+            Reverse a given string.
+            ======================
+            Hello   becomes olleh
+            Goodbye becomes eybdoog
+        */
         public string ReverseString(string str)
         {
-            //  Reverse a given string.
-            //  ======================
-            //  Hello   becomes olleh
-            //  Goodbye becomes eybdoog
 
             if (str.Length <= 1)
             {
@@ -25,6 +141,7 @@ namespace AssessmentSuiteLibrary.Services
             }
             return ReverseString(str.Substring(1)) + str[0];
         }
+
 
         public bool ArrayContainsOnlyDigits(char[] chars)
         {
@@ -40,11 +157,17 @@ namespace AssessmentSuiteLibrary.Services
             return isAllDigits;
         }
 
+
         public int? FindDuplicateNumber(int[] numbers)
         {
             int? duplicateNumber = null;
 
+            // HashSet<int> is preferred for its effinciency in duplicate
+            //              detection due to constant-time operations, prevention
+            //              of duplicates by design, and optimal memory use.
             HashSet<int> seenNumbers = new HashSet<int>();
+
+
             foreach (var number in numbers)
             {
                 if (seenNumbers.Contains(number))
@@ -186,6 +309,8 @@ namespace AssessmentSuiteLibrary.Services
 
 
         /*
+            CountLessThanEqualToGreaterThanCompareValue()  - returns a tuple
+
             You are given:
 
             val1: an integer

@@ -1,23 +1,29 @@
-﻿using NUnit.Framework;
-using Moq;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using WeatherLibrary.Services.WeatherForecast;
 using AppServiceCore.Models.WeatherForecast;
+using AppServiceCore.Logging;
+using DjostAspNetCoreWebServerTests;
 
 namespace WeatherForecastServiceTests
 {
     [TestFixture]
     public class WeatherForecastServiceTests
     {
-        private Mock<ILogger<WeatherForecastService>> _loggerMock;
-        private WeatherForecastService _weatherForecastService;
+        private MockLoggerProvider _mockLoggerProvider;
 
         [SetUp]
-        public void Setup() 
+        public void Setup()
         {
-            _loggerMock = new Mock<ILogger<WeatherForecastService>>();
-            _weatherForecastService = new WeatherForecastService(_loggerMock.Object);
+            _mockLoggerProvider = new MockLoggerProvider();
+            var loggerFactory = new LoggerFactory(new[] { _mockLoggerProvider });
+            AppLogger.InitializeLogger(loggerFactory);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _mockLoggerProvider.Dispose();
         }
 
         [Test]
@@ -31,10 +37,9 @@ namespace WeatherForecastServiceTests
                 TemperatureC = 25
             };
 
-
             // Act
-            var result = _weatherForecastService.GetWeatherForecast(request);
-
+            var weatherForecastService = new WeatherForecastService();
+            var result = weatherForecastService.GetWeatherForecast(request);
 
             // Assert
             Assert.IsTrue(result.IsSuccess, "The result should be successful.");

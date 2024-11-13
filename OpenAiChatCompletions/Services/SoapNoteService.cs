@@ -1,37 +1,35 @@
 ﻿using OpenAiChatCompletions.Models.MedicalVisitNote;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenAiChatCompletions.Interfaces;
 using AppServiceCore;
 using Microsoft.Extensions.Logging;
-using OpenAiChatCompletions.Repositories;
 using OpenAiChatCompletions.Models.ChatCompletion;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using AppServiceCore.Logging;
 
 namespace OpenAiChatCompletions.Services
 {
     /*
-        This logic is designed to  generate a detailed medical summary based on conversations between a patient and 
-        a healthcare provider, using an AI-powered completion service.  The transcription of this conversation is
-        sent to an AI-powered service, which responds with structured information that highlights relevant health
+        This logic is designed to generate a detailed medical summary (Visit Note) based on conversations between a 
+        patient and a healthcare provider, using an AI-powered completion service.  The transcription of this conversation
+        is sent to an AI-powered service, which responds with structured information that highlights relevant health
         details, such as symptoms (chief complaint), diagnosis, services preformed, medications, and prescribed actions.
         This structured summary provides organized information that can be easily stored in the patient's medical record.
     */
 
     public class SoapNoteService : ISoapNoteService
     {
+        private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.OpenAiChatCompletions);
+
         private readonly IOpenAiChatCompletionRepository _openAiChatCompletionRepository;
-        private readonly ILogger<ChatCompletionsRepository> _logger;
 
         public SoapNoteService(
-            ILogger<ChatCompletionsRepository> logger,
             IOpenAiChatCompletionRepository openAiChatCompletionRepository)
         {
-            _logger = logger;
             _openAiChatCompletionRepository = openAiChatCompletionRepository;
         }
 

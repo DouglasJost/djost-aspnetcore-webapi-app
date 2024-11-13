@@ -1,14 +1,11 @@
-﻿using AppServiceCore.Models.AssessmentSuite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AppServiceCore.Interfaces.AssessmentSuite
 {
     public interface IArrayCodingQuestionsService
     {
+        (string SentenceWithoutSpecialCharacters, string RemovedSpecialCharacters) RemoveSpecialCharacters(string sentence);
+
         string ReverseString(string str);
 
         bool ArrayContainsOnlyDigits(char[] chars);

@@ -1,12 +1,10 @@
 ﻿using AppServiceCore;
+using AppServiceCore.Logging;
 using Microsoft.Extensions.Logging;
 using OpenAiChatCompletions.Interfaces;
 using OpenAiChatCompletions.Models.ChatCompletion;
 using OpenAiChatCompletions.Models.MedicalVisitNote;
-using OpenAiChatCompletions.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,18 +12,17 @@ namespace OpenAiChatCompletions.Repositories
 {
     public class ChatCompletionsRepository : IChatCompletionsRepository
     {
-        private readonly ILogger<ChatCompletionsRepository> _logger;
+        private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.OpenAiChatCompletions);
+
         private readonly IVisitNoteTranscriptService _visitNoteTranscriptService;
         private readonly ISoapNoteService _soapNoteService;
         private readonly IOpenAiChatCompletionRepository _openAiChatCompletionRepository;
 
         public ChatCompletionsRepository(
-            ILogger<ChatCompletionsRepository> logger,
             IVisitNoteTranscriptService visitNoteTranscriptService,
             ISoapNoteService soapNoteService,
             IOpenAiChatCompletionRepository openAiChatCompletionRepository)
         {
-            _logger = logger;
             _visitNoteTranscriptService = visitNoteTranscriptService;
             _soapNoteService = soapNoteService;
             _openAiChatCompletionRepository = openAiChatCompletionRepository;
@@ -40,11 +37,10 @@ namespace OpenAiChatCompletions.Repositories
             }
             catch (Exception ex)
             {
-                var sbError = new StringBuilder();
-                sbError.Append("ChatCompletionsRepository.GetCompletionAsync:  Error calling chat completion REST endpoint.");
+                var sbError = new StringBuilder("ChatCompletionsRepository.GetCompletionAsync:  Error calling chat completion REST endpoint.");
+                sbError.Append($"  {ExceptionUtilities.AppendExceptionMessages(ex)}");
                 _logger.LogError(ex, sbError.ToString());
 
-                sbError.Append($"  {ExceptionUtilities.AppendExceptionMessages(ex)}");
                 return CommandResult<ChatCompletionResponseDto>.Failure(sbError.ToString());
             }
         }

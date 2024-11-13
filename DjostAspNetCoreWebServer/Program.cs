@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
+using Microsoft.Extensions.Logging;
 using System.Text.Json.Serialization;
 
 namespace DjostAspNetCoreWebServer
@@ -36,7 +36,19 @@ namespace DjostAspNetCoreWebServer
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //
+            // Add logging configuration
+            //
+            // NOTE: Default Log Level is set in appsettings.Development.json and appsettings.json
+            // 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
+
             var app = builder.Build();
+
+            // Initialize the AppLogger with the application's logger factory
+            AppServiceCore.Logging.AppLogger.InitializeLogger(app.Services.GetRequiredService<ILoggerFactory>());
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -45,7 +57,7 @@ namespace DjostAspNetCoreWebServer
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseAuthorization();  
 
             app.MapControllers();
 

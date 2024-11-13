@@ -1,17 +1,13 @@
-﻿using AppServiceCore;
-using AppServiceCore.Interfaces.AssessmentSuite;
-using AppServiceCore.Models.AssessmentSuite;
-using System;
+﻿using AppServiceCore.Interfaces.AssessmentSuite;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AssessmentSuiteLibrary.Services
 {
     public class SpecialCharactersService : ISpecialCharactersService
     {
-        public (string SentenceWithoutSpecialCharacters, string RemovedSpecialCharacters) RemoveSpecialCharacters(string sentence)
+        public (string SentenceWithoutSpecialCharacters, string RemovedSpecialCharacters) RemoveSpecialCharacters123(string sentence)
         {
             /*
                     The given code snippet is supposed to remove all special characters from a string.  The only

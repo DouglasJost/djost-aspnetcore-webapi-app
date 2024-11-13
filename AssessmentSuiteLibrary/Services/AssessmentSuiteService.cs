@@ -3,11 +3,7 @@ using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AssessmentSuiteLibrary.Services
 {
@@ -293,7 +289,7 @@ namespace AssessmentSuiteLibrary.Services
 
             try
             {
-                var result = _specialCharactersService.RemoveSpecialCharacters(sentence);
+                var result = _arrayCodingQuestionsService.RemoveSpecialCharacters(sentence);
                 response.SentenceWithoutSpecialCharacters = result.SentenceWithoutSpecialCharacters;
                 response.RemovedSpecialCharacters = result.RemovedSpecialCharacters;
             }

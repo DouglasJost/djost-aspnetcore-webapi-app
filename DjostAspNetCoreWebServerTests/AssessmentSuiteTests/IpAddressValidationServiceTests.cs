@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AssessmentSuiteLibrary.Services;
-using AppServiceCore.Models.AssessmentSuite;
-using AppServiceCore.Interfaces.AssessmentSuite;
-using WeatherLibrary.Services.WeatherForecast;
+﻿using AssessmentSuiteLibrary.Services;
 
 namespace DjostAspNetCoreWebServerTests.AssessmentSuiteTests
 {

@@ -1,8 +1,6 @@
 ﻿using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
 {
@@ -10,20 +8,18 @@ namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
     [Route("api/v1/[controller]")]
     public class AssessmentSuiteController : ControllerBase
     {
-        private readonly ILogger<AssessmentSuiteController> _logger;
         private readonly IIpAddressValidationService _ipAddressValidationService;
         private readonly ISpecialCharactersService _specialCharactersService;
         private readonly IArrayCodingQuestionsService _arrayCodingQuestionsService;
         private readonly IAssessmentSuiteService _AssessmentSuiteService;
 
         public AssessmentSuiteController(
-            ILogger<AssessmentSuiteController> logger,
             IIpAddressValidationService ipAddressValidationService,
             ISpecialCharactersService specialCharactersService,
             IArrayCodingQuestionsService arrayCodingQuestionsService,
             IAssessmentSuiteService AssessmentSuiteService)
         {
-            _logger = logger;
+            //_logger = logger;
             _ipAddressValidationService = ipAddressValidationService;
             _specialCharactersService = specialCharactersService;
             _arrayCodingQuestionsService = arrayCodingQuestionsService;

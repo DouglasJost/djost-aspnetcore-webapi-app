@@ -4,15 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
+    <UserSecretsId>9810f457-7a22-4298-819e-b1c77e9bbf70</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AppServiceCore\AppServiceCore.csproj" />
+    <ProjectReference Include="..\BusStopSimulation\BusStopSimulation.csproj" />
     <ProjectReference Include="..\OpenAiChatCompletions\OpenAiChatCompletions.csproj" />
     <ProjectReference Include="..\ParkingLotLibrary\ParkingLotLibrary.csproj" />
     <ProjectReference Include="..\AssessmentSuiteLibrary\AssessmentSuiteLibrary.csproj" />
