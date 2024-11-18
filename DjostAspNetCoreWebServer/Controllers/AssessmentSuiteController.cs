@@ -1,11 +1,13 @@
 ﻿using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class AssessmentSuiteController : ControllerBase
     {
         private readonly IIpAddressValidationService _ipAddressValidationService;

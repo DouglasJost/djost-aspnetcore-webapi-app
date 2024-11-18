@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OpenAiChatCompletions.Interfaces;
 using OpenAiChatCompletions.Models.ChatCompletion;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace DjostAspNetCoreWebServer.Controllers.OpenAiChatCompletions
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-
+    [Authorize]
     public class OpenAiChatCompletionsController : ControllerBase
     {
         private readonly IChatCompletionsRepository _chatCompletionsRepository;

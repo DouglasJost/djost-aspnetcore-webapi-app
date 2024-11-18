@@ -1,10 +1,12 @@
 ﻿using BusStopSimulation.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DjostAspNetCoreWebServer.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class BusStopSimulationController : ControllerBase
     {
         private readonly IBusStopSimulation _busStopSimulation;

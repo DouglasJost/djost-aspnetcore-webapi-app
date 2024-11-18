@@ -15,3 +15,7 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Added assessment library.
 
 * Adding NUnit tests for the various class libraries that are included in this application.
+
+* Added JWT Bearer Token authentication.  Reference LoginAuthenticationController.cs, AuthenticationService.cs and Program.cs. 
+
+* Added Serilog general and custom loggers.  Reference Program.cs, appsettings.json, and AppSerilogLogger.cs.
