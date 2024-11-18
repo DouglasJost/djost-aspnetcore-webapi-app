@@ -12,7 +12,6 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Events;
 using Microsoft.AspNetCore.Http;
-using System.Text.Json;
 
 namespace DjostAspNetCoreWebServer
 {

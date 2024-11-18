@@ -1,7 +1,15 @@
-﻿namespace AppServiceCore.Models.AssessmentSuite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppServiceCore.Models.AssessmentSuite
 {
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
+
     public class IpAddressValidationRequestDto
     {
-        public string IpAddress { get; set; }
+        [Required(ErrorMessage = "IpAddress attribute is required.")]
+        public string? IpAddress { get; set; }
     }
 }

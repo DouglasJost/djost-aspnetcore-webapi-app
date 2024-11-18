@@ -1,8 +1,16 @@
-﻿namespace AppServiceCore.Models.AssessmentSuite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppServiceCore.Models.AssessmentSuite
 {
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
+
     public class ConvertTimeFormatRequestDto
     {
-        public string InputTime { get; set; } = string.Empty;
+        [Required(ErrorMessage = "InputTime attribute is required.")]
+        public string? InputTime { get; set; }
     }
 
     public class ConvertTimeFormResponseDto : ConvertTimeFormatRequestDto

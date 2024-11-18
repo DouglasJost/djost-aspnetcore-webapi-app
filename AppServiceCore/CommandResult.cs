@@ -3,14 +3,14 @@
     public class CommandResult<T>
     {
         public bool IsSuccess { get; private set; }
-        public string ErrorMessage { get; private set; }
-        public T Value { get; private set; }
+        public string ErrorMessage { get; private set; } = string.Empty;
+        public T? Value { get; private set; }
 
-        private CommandResult(bool isSuccess, T value, string errorMessage)
+        private CommandResult(bool isSuccess, T? value, string? errorMessage)
         {
             IsSuccess = isSuccess;
             Value = value;
-            ErrorMessage = errorMessage;
+            ErrorMessage = !string.IsNullOrEmpty(errorMessage) ? errorMessage : string.Empty;
         }
 
         // Factory methods for creating success and failure results

@@ -19,3 +19,5 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Added JWT Bearer Token authentication.  Reference LoginAuthenticationController.cs, AuthenticationService.cs and Program.cs. 
 
 * Added Serilog general and custom loggers.  Reference Program.cs, appsettings.json, and AppSerilogLogger.cs.
+
+* Added input validate by using System.ComponentModel.DataAnnotations.  Future enhancement is to use FluentValidation.

@@ -1,5 +1,10 @@
 ﻿namespace AppServiceCore.Models.AssessmentSuite
 {
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
+
     public class FormatAlphabetAlternatingCaseRequestDto
     {
         public bool IsFirstCharUpper {  get; set; } 

@@ -20,6 +20,11 @@ namespace DjostAspNetCoreWebServer.Controllers
         [HttpPost]
         public IActionResult GenerateSecret([FromBody] GenerateSecretRequestDto request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var response = _authenticationService.GenerateSecurityKey(request);
             return Ok(response);
         }

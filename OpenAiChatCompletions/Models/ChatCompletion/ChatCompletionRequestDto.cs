@@ -17,6 +17,11 @@ namespace OpenAiChatCompletions.Models.ChatCompletion
         user
     }
 
+
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
     public class ChatCompletionRequestDto
     {
         public string model { get; set; } = "gpt-3.5-turbo";

@@ -1,8 +1,17 @@
-﻿namespace AppServiceCore.Models.AssessmentSuite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppServiceCore.Models.AssessmentSuite
 {
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
+
     public class ToTitleCaseRequestDto
     {
-        public string Title { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Title attribute is required.")]
+        [MaxLength(50, ErrorMessage = "Title attribute must be between 1 and 50 characters in lenbth.")]
+        public string? Title { get; set; }
     }
 
     public class ToTileCaseResponseDto : ToTitleCaseRequestDto

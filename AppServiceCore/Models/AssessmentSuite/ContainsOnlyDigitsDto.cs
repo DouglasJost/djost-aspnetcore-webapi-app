@@ -1,7 +1,15 @@
-﻿namespace AppServiceCore.Models.AssessmentSuite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppServiceCore.Models.AssessmentSuite
 {
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
+
     public class ContainsOnlyDigitsRequestDto
     {
+        [Required(ErrorMessage = "Chars array attribute is required.")]
         public char[]? Chars {  get; set; }
     }
 

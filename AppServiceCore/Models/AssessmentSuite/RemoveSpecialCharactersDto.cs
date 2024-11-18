@@ -1,8 +1,17 @@
-﻿namespace AppServiceCore.Models.AssessmentSuite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AppServiceCore.Models.AssessmentSuite
 {
-    public  class RemoveSpecialCharactersRequestDto
+    //
+    // TODO : Use FluentValidation
+    // https://docs.fluentvalidation.net/en/latest/index.html
+    //
+
+    public class RemoveSpecialCharactersRequestDto
     {
-        public string Sentence { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Sentence attribute is required.")]
+        [MaxLength(50, ErrorMessage = "Sentence attribute must be between 1 and 50 characters in lenbth.")]
+        public string? Sentence { get; set; }
     }
 
     public class RemoveSpecialCharactersResponseDto
