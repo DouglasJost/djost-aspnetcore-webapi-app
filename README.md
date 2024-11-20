@@ -21,3 +21,5 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Added Serilog general and custom loggers.  Reference Program.cs, appsettings.json, and AppSerilogLogger.cs.
 
 * Added input validate by using System.ComponentModel.DataAnnotations.  Future enhancement is to use FluentValidation.
+
+* Added NuGet package Asp.Versioning.Mvc to support versioning of controller end points via the route.
