@@ -1,12 +1,14 @@
 ﻿using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1)]
     [Authorize]
     public class AssessmentSuiteController : ControllerBase
     {

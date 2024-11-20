@@ -1,5 +1,6 @@
 using AppServiceCore.Interfaces.WeatherForecast;
 using AppServiceCore.Models.WeatherForecast;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,7 +8,8 @@ using System;
 namespace DjostAspNetCoreWebServer.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1)]
     [Authorize]
     // Defines base URL segment for the controller.
     // Auto replace name of the controller class, excluding the "Controller" suffix.

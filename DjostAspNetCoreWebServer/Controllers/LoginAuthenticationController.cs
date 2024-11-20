@@ -1,12 +1,14 @@
-﻿using DjostAspNetCoreWebServer.Authentication.Interfaces;
+﻿using Asp.Versioning;
+using DjostAspNetCoreWebServer.Authentication.Interfaces;
 using DjostAspNetCoreWebServer.Authentication.Models;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 namespace DjostAspNetCoreWebServer.Controllers
 {
-    [Route("api/v1/LoginAuthentication")]
     [ApiController]
+    [Route("api/v{version:apiVersion}/LoginAuthentication")]
+    [ApiVersion(1)]
     public class LoginAuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;

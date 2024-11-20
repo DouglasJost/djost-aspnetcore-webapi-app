@@ -1,11 +1,13 @@
-﻿using BusStopSimulation.Interfaces;
+﻿using Asp.Versioning;
+using BusStopSimulation.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DjostAspNetCoreWebServer.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1)]
     [Authorize]
     public class BusStopSimulationController : ControllerBase
     {

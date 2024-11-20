@@ -12,6 +12,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Events;
 using Microsoft.AspNetCore.Http;
+using Asp.Versioning;
 
 namespace DjostAspNetCoreWebServer
 {
@@ -188,6 +189,15 @@ namespace DjostAspNetCoreWebServer
                         };
                     }
                 );
+
+
+            // Configure API Versioning
+            builder.Services.AddApiVersioning(setupAction =>
+            {
+                setupAction.ReportApiVersions = true;
+                setupAction.AssumeDefaultVersionWhenUnspecified = true;
+                setupAction.DefaultApiVersion = new ApiVersion(1, 0);
+            }).AddMvc();
 
             var app = builder.Build();
 
