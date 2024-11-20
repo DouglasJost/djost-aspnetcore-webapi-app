@@ -16,7 +16,20 @@ namespace OpenAiChatCompletions.Repositories
     {
         public async Task<ChatCompletionResponseDto> GetOpenAiChatCompletionAsync(ChatCompletionRequestDto request)
         {
+            //
             // Retrieve and validate environment varialbes
+            //
+            //   To create an environment variable from PowerShell prompt:
+            //     PS>set OPENAI_API_TOKEN=  
+            //     PS>set OPENAI_API_URL=
+            //      
+            //   To Display an enivronment varialbe from PowerShell prompt:
+            //     PS>Get-ChildItem Env:
+            //
+            //   Or, System Properties > Advanced Tab > Environment Variables 
+            //
+            //   Or, use Azure KeyVault
+            //
             var apiToken = Environment.GetEnvironmentVariable("OPENAI_API_TOKEN");
             var url = Environment.GetEnvironmentVariable("OPENAI_API_URL");
             if (string.IsNullOrWhiteSpace(apiToken) || string.IsNullOrWhiteSpace(url))
