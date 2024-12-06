@@ -3,6 +3,7 @@ using AppDomainEntities.Entities;
 using AppServiceCore.AutoMapper;
 using AppServiceCore.Interfaces.Authentication;
 using AppServiceCore.Models.Authentication;
+using AppServiceCore.Util;
 using Azure;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -38,12 +39,22 @@ namespace AppServiceCore.Repositories
             UserLogin? userLoginEntity = await _context.UserLogins
                 .AsNoTracking()
                 .Include(ul => ul.UserAccount)
-                .Where(ul => ul.Login == login && ul.Password == password)
+                //.Where(ul => ul.Login == login && ul.Password == password)
+                .Where(ul => ul.Login == login)
                 .FirstOrDefaultAsync();
 
             if (userLoginEntity == null)
             {
-                return authenticationDto;
+                return null;
+            }
+
+            // TODO: Change StringCipher so I do not compare unencrypted passwords.
+            //       Should compare encrypted passwords and if equal, then user is authenticated.
+            //       At least unencrypted passwords are not stored in the database. 
+            var decryptedPassword = StringCipher.Decrypt(userLoginEntity.Password);
+            if (decryptedPassword != password)
+            {
+                return null;
             }
 
             authenticationDto = _authenticationMapper.Map(userLoginEntity);

@@ -4,6 +4,7 @@ using AppDomainEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppDomainEntityFramework.Migrations
 {
     [DbContext(typeof(MusicCollectionDbContext))]
-    partial class MusicCollectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241206055108_UpdatePasswordToVarcharMax")]
+    partial class UpdatePasswordToVarcharMax
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace AppDomainEntityFramework.Migrations
                             UserAccountId = new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
                             FirstName = "JWT",
                             Inactive = false,
-                            LastModifiedDate = new DateTime(2024, 12, 6, 5, 56, 9, 443, DateTimeKind.Utc).AddTicks(1401),
+                            LastModifiedDate = new DateTime(2024, 12, 6, 5, 51, 8, 39, DateTimeKind.Utc).AddTicks(984),
                             LastName = "Issuer",
                             UserDefined = true
                         });
@@ -107,9 +110,9 @@ namespace AppDomainEntityFramework.Migrations
                         {
                             UserAccountId = new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
                             Inactive = false,
-                            LastModifiedDate = new DateTime(2024, 12, 6, 5, 56, 9, 443, DateTimeKind.Utc).AddTicks(1475),
+                            LastModifiedDate = new DateTime(2024, 12, 6, 5, 51, 8, 39, DateTimeKind.Utc).AddTicks(1054),
                             Login = "JwtIssuer",
-                            Password = "DHRDlZikUzbgrZDMbnw0L4CCiZJCvbMvIZGZUtBCoGna697qdCPnFZ53qHFxUKEzClrmoClhkuReEweYObes53sSENv4xZRJI9x+aS8xTD0=",
+                            Password = "RidersOnTheStorm",
                             UserDefined = true
                         });
                 });

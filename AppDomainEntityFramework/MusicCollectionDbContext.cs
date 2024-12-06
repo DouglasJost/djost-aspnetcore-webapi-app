@@ -69,7 +69,7 @@ public partial class MusicCollectionDbContext : DbContext
                 UserAccountId = Guid.Parse("4EC76740-6895-40F4-ABB8-3FBAB440FFF1"),
                 Inactive = false,
                 Login = "JwtIssuer",
-                Password = "RidersOnTheStorm",
+                Password = "DHRDlZikUzbgrZDMbnw0L4CCiZJCvbMvIZGZUtBCoGna697qdCPnFZ53qHFxUKEzClrmoClhkuReEweYObes53sSENv4xZRJI9x+aS8xTD0=",
                 UserDefined = true,
                 LastModifiedDate = DateTime.UtcNow
             });

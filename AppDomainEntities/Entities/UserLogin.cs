@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ public partial class UserLogin
     [Unicode(false)]
     public string Login { get; set; } = null!;
 
-    [StringLength(100)]
+    [Column(TypeName = "varchar(max)")]
     [Unicode(false)]
     public string Password { get; set; } = null!;
 
