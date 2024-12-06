@@ -10,7 +10,7 @@ namespace DjostAspNetCoreWebServer.Authentication.Models
     {
         [Required(ErrorMessage = "An attribute is missing or invalid.")]
         [MaxLength(50, ErrorMessage = "An attribute is missing or invalid.")]
-        public string? UserName { get; set; }
+        public string? Login { get; set; }
 
         [Required(ErrorMessage = "An attribute is missing or invalid.")]
         [MaxLength(50, ErrorMessage = "An attribute is missing or invalid.")]

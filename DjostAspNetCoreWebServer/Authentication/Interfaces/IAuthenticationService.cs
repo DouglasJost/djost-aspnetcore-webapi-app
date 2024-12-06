@@ -1,11 +1,12 @@
 ﻿using AppServiceCore;
 using DjostAspNetCoreWebServer.Authentication.Models;
+using System.Threading.Tasks;
 
 namespace DjostAspNetCoreWebServer.Authentication.Interfaces
 {
     public interface IAuthenticationService
     {
-        CommandResult<SecurityTokenResponseDto> CreateSecurityToken(SecurityTokenRequestDto request);
+        Task<CommandResult<SecurityTokenResponseDto>> CreateSecurityTokenAsync(SecurityTokenRequestDto request);
         CommandResult<GenerateSecretResponseDto> GenerateSecurityKey(GenerateSecretRequestDto request);
     }
 }

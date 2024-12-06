@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace DjostAspNetCoreWebServer.Controllers.OpenAiChatCompletions
 {
+    // http://localhost:5149/api/v2/OpenAiChatCompletions/MedicalSoapNote
+
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion(1)]

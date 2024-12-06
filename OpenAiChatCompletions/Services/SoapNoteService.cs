@@ -17,7 +17,7 @@ namespace OpenAiChatCompletions.Services
         This logic is designed to generate a detailed medical summary (Visit Note) based on conversations between a 
         patient and a healthcare provider, using an AI-powered completion service.  The transcription of this conversation
         is sent to an AI-powered service, which responds with structured information that highlights relevant health
-        details, such as symptoms (chief complaint), diagnosis, services preformed, medications, and prescribed actions.
+        details, such as symptoms (chief complaint), diagnosis, services preformed, services ordered, medications, and prescribed actions.
         This structured summary provides organized information that can be easily stored in the patient's medical record.
     */
 

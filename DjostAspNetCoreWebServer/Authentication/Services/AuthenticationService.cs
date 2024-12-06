@@ -1,4 +1,5 @@
 ﻿using AppServiceCore;
+using AppServiceCore.Interfaces;
 using AppServiceCore.Logging;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
 using DjostAspNetCoreWebServer.Authentication.Interfaces;
@@ -21,11 +22,16 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
             _tokenService = tokenService;
         }
 
-        public CommandResult<SecurityTokenResponseDto> CreateSecurityToken(SecurityTokenRequestDto request)
+        public async Task<CommandResult<SecurityTokenResponseDto>> CreateSecurityTokenAsync(SecurityTokenRequestDto request)
         {
             try
             {
-                var jwtSecurityToken = _tokenService.CreateJwtSecurityToken(request.UserName, request.Password);
+                if (request == null)
+                {
+                    return CommandResult<SecurityTokenResponseDto>.Failure("Request cannot be null.");
+                }
+
+                string jwtSecurityToken = await _tokenService.CreateJwtSecurityTokenAsync(request.Login, request.Password);
                 var response = new SecurityTokenResponseDto
                 {
                     JwtSecurityToken = jwtSecurityToken,

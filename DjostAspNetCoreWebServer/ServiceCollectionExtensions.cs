@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using AppServiceCore.AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DjostAspNetCoreWebServer
@@ -11,6 +12,8 @@ namespace DjostAspNetCoreWebServer
     {
         public static void AddServicesWithDefaultConventions(this IServiceCollection services)
         {
+            // Automatic registration of (MyClassName : IMyClassName) classes.
+
             //
             // This method will dynamically scan the loaded assemblies (and dynamically load any,
             // if necessary) and invoke the method ServiceRegistration.GetServices(), if found.
@@ -113,6 +116,13 @@ namespace DjostAspNetCoreWebServer
                             {
                                 if (interfaceType != null && implementationType != null)
                                 {
+                                    // Exclude IAutoTypeMapper.  
+                                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IAutoTypeMapper<,>))
+                                    {
+                                        // IAutoTypeMapper will be added explicitly as Transient in Program.cs after call to builder.Services.AddAutoMapper().
+                                        continue;
+                                    }
+
                                     // Register as Transient : create new instance every time requested
                                     services.AddTransient(interfaceType, implementationType);
 

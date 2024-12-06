@@ -14,7 +14,7 @@ namespace AppServiceCore
 
             // Find all classes that have matching interfaces by naming convention
             var serviceTypes = assembly.GetTypes()
-                .Where(t => t.IsClass && !t.IsAbstract)        // Get all concrete classes
+                .Where(t => t.IsClass && !t.IsAbstract)        // Get all concrete classes && t.Name != IAutoTypeMapper
                 .Select(t => new
                 {
                     Implementation = t,

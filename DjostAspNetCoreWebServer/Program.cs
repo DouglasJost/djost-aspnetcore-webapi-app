@@ -13,6 +13,9 @@ using Serilog.Exceptions;
 using Serilog.Events;
 using Microsoft.AspNetCore.Http;
 using Asp.Versioning;
+using AppDomainEntities;
+using Microsoft.EntityFrameworkCore;
+using AppServiceCore.AutoMapper;
 
 namespace DjostAspNetCoreWebServer
 {
@@ -124,7 +127,14 @@ namespace DjostAspNetCoreWebServer
 
             // Add services to the DI container.
             // See extension method ServiceCollectionExtensions.AddServicesWithDefaultConventions for implementation.
+            // NOTE: IAutoTypeMapper will be excluded and registered with call to builder.Services.AddTransient().
             builder.Services.AddServicesWithDefaultConventions();
+
+            // Scan for AutoMapper classes and register the configuration, mapping, and extensions with the service collection
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Explicitly register IAutoTypeMapper open generic type mapping
+            builder.Services.AddTransient(typeof(IAutoTypeMapper<,>), typeof(AutoTypeMapper<,>));
 
             // Add services to the container.
             builder.Services.AddControllers()
@@ -154,9 +164,11 @@ namespace DjostAspNetCoreWebServer
                 };
             });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            // Setup db connection string
+            builder.Services.AddDbContext<MusicCollectionDbContext>(
+                dbContextOptions => dbContextOptions.UseSqlServer(Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING"))
+                .EnableSensitiveDataLogging()
+            );
 
             //
             // Use JWT Bearer Token Authentication.
@@ -198,6 +210,11 @@ namespace DjostAspNetCoreWebServer
                 setupAction.AssumeDefaultVersionWhenUnspecified = true;
                 setupAction.DefaultApiVersion = new ApiVersion(1, 0);
             }).AddMvc();
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 

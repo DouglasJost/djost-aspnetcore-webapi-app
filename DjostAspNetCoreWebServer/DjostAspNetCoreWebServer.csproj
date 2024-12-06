@@ -10,6 +10,10 @@
   <ItemGroup>
 	<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
 	<PackageReference Include="Serilog" Version="4.1.0" />
 	<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 	<PackageReference Include="Serilog.Enrichers.AspNetCore" Version="1.0.0" />
@@ -22,6 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AppDomainEntities\AppDomainEntities.csproj" />
+    <ProjectReference Include="..\AppDomainEntityFramework\AppDomainEntityFramework.csproj" />
     <ProjectReference Include="..\AppServiceCore\AppServiceCore.csproj" />
     <ProjectReference Include="..\BusStopSimulation\BusStopSimulation.csproj" />
     <ProjectReference Include="..\OpenAiChatCompletions\OpenAiChatCompletions.csproj" />

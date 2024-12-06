@@ -7,45 +7,49 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
+using System.Threading.Tasks;
+using AppServiceCore.Interfaces.Authentication;
 
 namespace DjostAspNetCoreWebServer.Authentication.Services
 {
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
-        private readonly IValidateUserRepository _validateUserRepository;
+        private readonly IUserAuthenticationRepository _userAuthenticationRepository;
+        // private readonly IValidateUserRepository _validateUserRepository;
 
         public TokenService(
             IConfiguration configuration,
-            IValidateUserRepository validateUserRepository)
+            IUserAuthenticationRepository userAuthenticationRepository)
         {
             _configuration = configuration;
-            _validateUserRepository = validateUserRepository;
+            _userAuthenticationRepository = userAuthenticationRepository;
         }
 
-        public string CreateJwtSecurityToken(string userName, string password)
+        public async Task<string> CreateJwtSecurityTokenAsync(string? login, string? password)
         {
             // Retrieve authentication attributes from appsettings
             var base64Secret = _configuration["Authentication:SecretForKey"];
             var issuer = _configuration["Authentication:Issuer"];
             var audience = _configuration["Authentication:Audience"];
 
-            if (string.IsNullOrEmpty(base64Secret) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience))
+            if (string.IsNullOrWhiteSpace(base64Secret) || string.IsNullOrWhiteSpace(issuer) || string.IsNullOrEmpty(audience))
             {
                 throw new BadRequestException("Authentication configuration values are missing");
             }
 
             // Validate user credentials
-            var appUserInfo = _validateUserRepository.ValidateUserCredentials(userName, password);
-            if (appUserInfo == null ||
-                string.IsNullOrEmpty(appUserInfo.UserId) ||
-                string.IsNullOrEmpty(appUserInfo.Login) ||
-                string.IsNullOrEmpty(appUserInfo.LastName) ||
-                string.IsNullOrEmpty(appUserInfo.FirstName) ||
-                string.IsNullOrEmpty(appUserInfo.State) ||
-                string.IsNullOrEmpty(appUserInfo.City))
+            var userAuthenticationDto = await _userAuthenticationRepository.AuthenticationUserAsync(login, password);
+            if (userAuthenticationDto == null || 
+                string.IsNullOrWhiteSpace(userAuthenticationDto.Login) ||
+                string.IsNullOrWhiteSpace(userAuthenticationDto.UserFirstName) ||
+                string.IsNullOrWhiteSpace(userAuthenticationDto.UserLastName))
             {
-                throw new UnauthorizedUserCredentialsException("Application user information values are missing");
+                throw new UnauthorizedUserCredentialsException("Application user information values are missing.");
+            }
+            if (userAuthenticationDto.UserLoginInactive || userAuthenticationDto.UserAccountInactive)
+            {
+                throw new UnauthorizedUserCredentialsException("User login is inactive.");
             }
 
             // Generate symmetric security key
@@ -57,11 +61,9 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
             // Create claims for the token
             var claimsForToken = new List<Claim>
             {
-                new Claim("sub", appUserInfo.Login),
-                new Claim("given_name", appUserInfo.FirstName),
-                new Claim("family_name", appUserInfo.LastName),
-                new Claim("city", appUserInfo.City),
-                new Claim("state", appUserInfo.State),
+                new Claim("sub", userAuthenticationDto.Login),
+                new Claim("given_name", userAuthenticationDto.UserFirstName),
+                new Claim("family_name", userAuthenticationDto.UserLastName),
             };
 
             // Create the JWT security token
