@@ -1,4 +1,5 @@
-﻿using AppServiceCore;
+﻿using AppDomainEntities;
+using AppServiceCore;
 using AppServiceCore.Interfaces;
 using AppServiceCore.Logging;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
@@ -31,13 +32,15 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
                     return CommandResult<SecurityTokenResponseDto>.Failure("Request cannot be null.");
                 }
 
-                string jwtSecurityToken = await _tokenService.CreateJwtSecurityTokenAsync(request.Login, request.Password);
-                var response = new SecurityTokenResponseDto
+                using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
                 {
-                    JwtSecurityToken = jwtSecurityToken,
-                };
-
-                return CommandResult<SecurityTokenResponseDto>.Success(response);
+                    string jwtSecurityToken = await _tokenService.CreateJwtSecurityTokenAsync(dbContext, request.Login, request.Password);
+                    var response = new SecurityTokenResponseDto
+                    {
+                        JwtSecurityToken = jwtSecurityToken,
+                    };
+                    return CommandResult<SecurityTokenResponseDto>.Success(response);
+                }
             }
             catch (Exception ex)
             {

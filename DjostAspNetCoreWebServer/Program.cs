@@ -136,6 +136,13 @@ namespace DjostAspNetCoreWebServer
             // Explicitly register IAutoTypeMapper open generic type mapping
             builder.Services.AddTransient(typeof(IAutoTypeMapper<,>), typeof(AutoTypeMapper<,>));
 
+            // Setup db connection string - See MusicCollectionDbContext.cs for explaination why "builder.Services.AddDbContext<T>()" is not called.
+            // ==========================
+            //builder.Services.AddDbContext<MusicCollectionDbContext>(
+            //    dbContextOptions => dbContextOptions.UseSqlServer(Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING"))
+            //    .EnableSensitiveDataLogging()
+            //);
+
             // Add services to the container.
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
@@ -163,12 +170,6 @@ namespace DjostAspNetCoreWebServer
                     ctx.ProblemDetails.Extensions.Add("server", Environment.MachineName);
                 };
             });
-
-            // Setup db connection string
-            builder.Services.AddDbContext<MusicCollectionDbContext>(
-                dbContextOptions => dbContextOptions.UseSqlServer(Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING"))
-                .EnableSensitiveDataLogging()
-            );
 
             //
             // Use JWT Bearer Token Authentication.

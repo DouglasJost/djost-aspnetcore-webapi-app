@@ -1,4 +1,5 @@
-﻿using AppServiceCore.Models.Authentication;
+﻿using AppDomainEntities;
+using AppServiceCore.Models.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace AppServiceCore.Interfaces.Authentication
 {
     public interface IUserAuthenticationRepository
     {
-        Task<AuthenticationDto?> AuthenticationUserAsync(string? userName, string? password);
+        Task<AuthenticationDto?> AuthenticationUserAsync(MusicCollectionDbContext dbContext, string? login, string? password);
     }
 }

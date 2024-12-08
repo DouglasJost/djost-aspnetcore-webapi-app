@@ -16,18 +16,14 @@ namespace AppServiceCore.Repositories
 {
     public class UserAuthenticationRepository : IUserAuthenticationRepository
     {
-        private readonly MusicCollectionDbContext _context;
         private readonly IAutoTypeMapper<UserLogin, AuthenticationDto> _authenticationMapper;
 
-        public UserAuthenticationRepository(
-            MusicCollectionDbContext context,
-            IAutoTypeMapper<UserLogin, AuthenticationDto> authenticationMapper)
+        public UserAuthenticationRepository(IAutoTypeMapper<UserLogin, AuthenticationDto> authenticationMapper)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
             _authenticationMapper = authenticationMapper ?? throw new ArgumentNullException(nameof(authenticationMapper));
         }
 
-        public async Task<AuthenticationDto?> AuthenticationUserAsync(string? login, string? password)
+        public async Task<AuthenticationDto?> AuthenticationUserAsync(MusicCollectionDbContext dbContext, string? login, string? password)
         {
             AuthenticationDto? authenticationDto = null;
 
@@ -36,7 +32,7 @@ namespace AppServiceCore.Repositories
                 return authenticationDto;
             }
 
-            UserLogin? userLoginEntity = await _context.UserLogins
+            UserLogin? userLoginEntity = await dbContext.UserLogins
                 .AsNoTracking()
                 .Include(ul => ul.UserAccount)
                 //.Where(ul => ul.Login == login && ul.Password == password)
@@ -48,9 +44,7 @@ namespace AppServiceCore.Repositories
                 return null;
             }
 
-            // TODO: Change StringCipher so I do not compare unencrypted passwords.
-            //       Should compare encrypted passwords and if equal, then user is authenticated.
-            //       At least unencrypted passwords are not stored in the database. 
+            // TODO: Refactor StringCipher, so encrypted passwords can be compared instead of having to decrypt the login password.
             var decryptedPassword = StringCipher.Decrypt(userLoginEntity.Password);
             if (decryptedPassword != password)
             {
@@ -58,7 +52,6 @@ namespace AppServiceCore.Repositories
             }
 
             authenticationDto = _authenticationMapper.Map(userLoginEntity);
-
             return authenticationDto;
         }
     }

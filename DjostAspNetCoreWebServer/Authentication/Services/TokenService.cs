@@ -9,6 +9,7 @@ using System.Text;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
 using System.Threading.Tasks;
 using AppServiceCore.Interfaces.Authentication;
+using AppDomainEntities;
 
 namespace DjostAspNetCoreWebServer.Authentication.Services
 {
@@ -26,7 +27,7 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
             _userAuthenticationRepository = userAuthenticationRepository;
         }
 
-        public async Task<string> CreateJwtSecurityTokenAsync(string? login, string? password)
+        public async Task<string> CreateJwtSecurityTokenAsync(MusicCollectionDbContext dbContext, string? login, string? password)
         {
             // Retrieve authentication attributes from appsettings
             var base64Secret = _configuration["Authentication:SecretForKey"];
@@ -39,7 +40,7 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
             }
 
             // Validate user credentials
-            var userAuthenticationDto = await _userAuthenticationRepository.AuthenticationUserAsync(login, password);
+            var userAuthenticationDto = await _userAuthenticationRepository.AuthenticationUserAsync(dbContext, login, password);
             if (userAuthenticationDto == null || 
                 string.IsNullOrWhiteSpace(userAuthenticationDto.Login) ||
                 string.IsNullOrWhiteSpace(userAuthenticationDto.UserFirstName) ||
