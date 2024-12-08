@@ -68,7 +68,6 @@ then create a migration to update the database schema.
 
 Would rather update the database schema, then run a "migration" that updates the DbContext.cs file and Entities classes (AppDomainEntities).
 
-
 Have to 
 1) update entities classes and or DbSet params in the DbContext.cs file.
 2) create a migration :: "PM> add-migration <migration-name>".

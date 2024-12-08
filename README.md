@@ -23,3 +23,11 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Added input validate by using System.ComponentModel.DataAnnotations.  Future enhancement is to use FluentValidation.
 
 * Added NuGet package Asp.Versioning.Mvc to support versioning of controller end points via the route.
+
+* Added Entity Framework Core and EF Core Power Tools.  
+
+  All application domain entities referenced by Entity Framework Core are contained in the AppDomainEntities project.  Please note, Database First approach was used to initially create the entity classes.
+    
+  Entity Framework Core logic is contained in the AppDomainEntityFramework project.  This is where the migrations and the DbContext.cs file are located.  A README file is included in the project root, which has the PowerShell (Package Manager) and CLI commands to scaffold the DbContext for db first approach.  Migration commands that have been run are also included in the README file.  
+
+  With respect to Entity Framework Core and ASP.NET Core DI, a design decision was made not to have DI manage the DbContext.  Instead it is the responsibility of the Parent Service to manage the DbContext.  This is why the "MyClassName: IMyClassName" classes are registered as Transient and "builder.Services.AddDbContext()" statement is not included in Program.cs.  Please reference MusicCollectionDbContext.cs where this reasoning is explained and for an example of how the DbContext should be managed.
