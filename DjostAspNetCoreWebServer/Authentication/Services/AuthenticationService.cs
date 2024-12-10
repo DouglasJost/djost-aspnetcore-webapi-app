@@ -2,6 +2,8 @@
 using AppServiceCore;
 using AppServiceCore.Interfaces;
 using AppServiceCore.Logging;
+using AppServiceCore.Util;
+using Azure;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
 using DjostAspNetCoreWebServer.Authentication.Interfaces;
 using DjostAspNetCoreWebServer.Authentication.Models;
@@ -66,6 +68,26 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
             };
 
             return CommandResult<GenerateSecretResponseDto>.Success(response);
+        }
+
+        public CommandResult<string> HashPassword(string password)
+        {
+            try 
+            {
+                var response = PasswordHasher.HashPassword(password);
+                return CommandResult<string>.Success(response);
+            }
+            catch (Exception ex)
+            {
+                var sbError = new StringBuilder("Error hashing password.");
+                sbError.AppendLine($"{Environment.NewLine}  {ex.GetType().ToString()}");
+                sbError.AppendLine($"{Environment.NewLine}  {ExceptionUtilities.AppendExceptionMessages(ex)}");
+
+                _logger.LogError(sbError.ToString());
+
+                //return CommandResult<string>.Failure(sbError.ToString());
+                throw;
+            }
         }
     }
 }

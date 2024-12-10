@@ -18,7 +18,7 @@ public partial class UserLogin
     [Unicode(false)]
     public string Login { get; set; } = null!;
 
-    [Column(TypeName = "varchar(max)")]
+    [StringLength(100)]
     [Unicode(false)]
     public string Password { get; set; } = null!;
 

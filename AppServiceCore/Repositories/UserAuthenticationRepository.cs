@@ -35,7 +35,6 @@ namespace AppServiceCore.Repositories
             UserLogin? userLoginEntity = await dbContext.UserLogins
                 .AsNoTracking()
                 .Include(ul => ul.UserAccount)
-                //.Where(ul => ul.Login == login && ul.Password == password)
                 .Where(ul => ul.Login == login)
                 .FirstOrDefaultAsync();
 
@@ -44,9 +43,8 @@ namespace AppServiceCore.Repositories
                 return null;
             }
 
-            // TODO: Refactor StringCipher, so encrypted passwords can be compared instead of having to decrypt the login password.
-            var decryptedPassword = StringCipher.Decrypt(userLoginEntity.Password);
-            if (decryptedPassword != password)
+            var isValid = PasswordHasher.VerifyPassword(password, userLoginEntity.Password);
+            if (!isValid)
             {
                 return null;
             }

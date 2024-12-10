@@ -31,3 +31,12 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
   Entity Framework Core logic is contained in the AppDomainEntityFramework project.  This is where the migrations and the DbContext.cs file are located.  A README file is included in the project root, which has the PowerShell (Package Manager) and CLI commands to scaffold the DbContext for db first approach.  Migration commands that have been run are also included in the README file.  
 
   With respect to Entity Framework Core and ASP.NET Core DI, a design decision was made not to have DI manage the DbContext.  Instead it is the responsibility of the Parent Service to manage the DbContext.  This is why the "MyClassName: IMyClassName" classes are registered as Transient and "builder.Services.AddDbContext()" statement is not included in Program.cs.  Please reference MusicCollectionDbContext.cs where this reasoning is explained and for an example of how the DbContext should be managed.
+
+* Added Password hashing logic.  Rfc2898DeriveBytes.Pbkdf2() is used to hash a given password. 
+  
+  Reference AppServiceCore.Util.PasswordHasher HashPassword(string password) and VerifyPassword(string password, string hashedPassword).
+
+  Reference AppDomainEntities.MusicCollectionDbContext.OnModelCreating(ModelBuilder modelBuilder) for system Login and hashed (with salt) Password.
+
+  Reference DjostAspNetCoreWebServer.Controllers Authenticate() and HashPassword() for workflow examples.
+

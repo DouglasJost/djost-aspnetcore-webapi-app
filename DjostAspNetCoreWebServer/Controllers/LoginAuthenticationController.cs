@@ -53,5 +53,13 @@ namespace DjostAspNetCoreWebServer.Controllers
             var response = await _authenticationService.CreateSecurityTokenAsync(request);
             return Ok(response);
         }
+
+        [Route("HashPassword")]
+        [HttpPost]
+        public IActionResult HashPassword([FromBody] string password) 
+        {
+            var response = _authenticationService.HashPassword(password);
+            return Ok(response);    
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace DjostAspNetCoreWebServer.Authentication.Interfaces
     {
         Task<CommandResult<SecurityTokenResponseDto>> CreateSecurityTokenAsync(SecurityTokenRequestDto request);
         CommandResult<GenerateSecretResponseDto> GenerateSecurityKey(GenerateSecretRequestDto request);
+        CommandResult<string> HashPassword(string password);
     }
 }
