@@ -40,3 +40,8 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
   Reference DjostAspNetCoreWebServer.Controllers Authenticate() and HashPassword() for workflow examples.
 
+* Added initial MusicCollection entity classes (Album, Artist, Band, BandMembership, Genre, Song, SongWriter) and created migration.  
+
+* Added SQL database insert scripts for initial MusicCollection system and seed data tables.
+
+  Reference AppDomainEntityFramework\SQL\01_InsertSystemData.sql and 02_InsertSeedData.sql.

@@ -13,6 +13,21 @@ public partial class MusicCollectionDbContext : DbContext
 
     public virtual DbSet<UserLogin> UserLogins { get; set; }
 
+    public virtual DbSet<Album> Albums { get; set; }
+
+    public virtual DbSet<Artist> Artists { get; set; }
+
+    public virtual DbSet<Band> Bands { get; set; }
+
+    public virtual DbSet<BandMembership> BandMemberships { get; set; }
+
+    public virtual DbSet<Genre> Genres { get; set; }
+
+    public virtual DbSet<Song> Songs { get; set; }
+
+    public virtual DbSet<SongWriter> SongWriters { get; set; }
+
+
 
     public MusicCollectionDbContext()
     {
@@ -73,12 +88,27 @@ public partial class MusicCollectionDbContext : DbContext
         //
 
 
-        //var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
-        //if (dbConnectionString == null)
-        //{
-        //    throw new ArgumentNullException(nameof(dbConnectionString));
-        //}
-        //optionsBuilder.UseSqlServer(dbConnectionString);
+        //
+        // Retrieve and validate environment varialbes
+        //
+        //   To create an environment variable from PowerShell prompt:
+        //     PS>set OPENAI_API_TOKEN=  
+        //     PS>set OPENAI_API_URL=
+        //      
+        //   To Display an enivronment varialbe from PowerShell prompt:
+        //     PS>Get-ChildItem Env:
+        //
+        //   Or, System Properties > Advanced Tab > Environment Variables 
+        //
+        //   Or, use Azure KeyVault
+        //
+
+        var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
+        if (dbConnectionString == null)
+        {
+            throw new ArgumentNullException(nameof(dbConnectionString));
+        }
+        optionsBuilder.UseSqlServer(dbConnectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -99,6 +129,71 @@ public partial class MusicCollectionDbContext : DbContext
             entity.HasOne(d => d.UserAccount).WithOne(p => p.UserLogin)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserLogin_User");
+        });
+
+        modelBuilder.Entity<Album>(entity =>
+        {
+            entity.Property(e => e.AlbumId).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.PlaybackFormat).HasComment("e.g., Vinyl, CD, Digital ");
+
+            entity.HasOne(d => d.Artist).WithMany(p => p.Albums).HasConstraintName("FK_Album_Artist");
+
+            entity.HasOne(d => d.Band).WithMany(p => p.Albums).HasConstraintName("FK_Album_Band");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.Albums).HasConstraintName("FK_Album_Genre");
+        });
+
+        modelBuilder.Entity<Artist>(entity =>
+        {
+            entity.Property(e => e.ArtistId).HasDefaultValueSql("(newid())");
+        });
+
+        modelBuilder.Entity<Band>(entity =>
+        {
+            entity.Property(e => e.BandId).HasDefaultValueSql("(newid())");
+        });
+
+        modelBuilder.Entity<BandMembership>(entity =>
+        {
+            entity.Property(e => e.BandMembershipId).HasDefaultValueSql("(newid())");
+
+            entity.HasOne(d => d.Artist).WithMany(p => p.BandMemberships)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BandMembership_Artist");
+
+            entity.HasOne(d => d.Band).WithMany(p => p.BandMemberships)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BandMembership_Band");
+        });
+
+        modelBuilder.Entity<Genre>(entity =>
+        {
+            entity.Property(e => e.GenreId).HasDefaultValueSql("(newid())");
+        });
+
+        modelBuilder.Entity<Song>(entity =>
+        {
+            entity.HasKey(e => e.SongId).HasName("Unique_AlbumId_TrackNumber");
+
+            entity.Property(e => e.SongId).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.TrackNumber).HasComment("Order of the song in the album");
+
+            entity.HasOne(d => d.Album).WithMany(p => p.Songs)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Song_Album");
+        });
+
+        modelBuilder.Entity<SongWriter>(entity =>
+        {
+            entity.Property(e => e.SongWriterId).HasDefaultValueSql("(newid())");
+
+            entity.HasOne(d => d.Artist).WithMany(p => p.SongWriters)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SongWriter_Artist");
+
+            entity.HasOne(d => d.Song).WithMany(p => p.SongWriters)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SongWriter_Song");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -30,6 +30,7 @@ PMC (Package Manager Console from Visual Studio - executes PowerShell commands)
 PM> add-migration InitialMigration
 PM> add-migration SeedUserAccountAndUserLogin
 PM> add-migration UpdatePasswordLength
+PM> add-migration AddedInitialMusicCollectionEntityClasses
 
 
 =================================

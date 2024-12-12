@@ -16,6 +16,6 @@ INSERT INTO UserAccount (UserAccountId, Inactive, FirstName, LastName, UserDefin
 select * from UserLogin 
 
 INSERT INTO UserLogin (UserAccountId, Inactive, Login, Password, UserDefined, LastModifiedDate)
-  VALUES ('4EC76740-6895-40F4-ABB8-3FBAB440FFF1', 0, 'Login', 'HelloGoodbye', 1, GETUTCDATE())
+  VALUES ('4EC76740-6895-40F4-ABB8-3FBAB440FFF1', 0, 'JwtIssuer', 'mVwmDVr8OwTwnbVwDvi40w==.DWy8ko+AwMzcA/yu2uGVVCiMM2dGdXkWmkn0FGZvkxk=', 1, GETUTCDATE())
 
 
