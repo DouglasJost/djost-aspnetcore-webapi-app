@@ -4,6 +4,7 @@ using AppDomainEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppDomainEntityFramework.Migrations
 {
     [DbContext(typeof(MusicCollectionDbContext))]
-    partial class MusicCollectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241215170426_AddGetBandByBandNameStoredProcedure")]
+    partial class AddGetBandByBandNameStoredProcedure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,7 +306,7 @@ namespace AppDomainEntityFramework.Migrations
                             UserAccountId = new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
                             FirstName = "JWT",
                             Inactive = false,
-                            LastModifiedDate = new DateTime(2024, 12, 16, 16, 6, 51, 951, DateTimeKind.Utc).AddTicks(4240),
+                            LastModifiedDate = new DateTime(2024, 12, 15, 17, 4, 26, 426, DateTimeKind.Utc).AddTicks(4798),
                             LastName = "Issuer",
                             UserDefined = true
                         });
@@ -348,7 +351,7 @@ namespace AppDomainEntityFramework.Migrations
                         {
                             UserAccountId = new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
                             Inactive = false,
-                            LastModifiedDate = new DateTime(2024, 12, 16, 16, 6, 51, 951, DateTimeKind.Utc).AddTicks(4386),
+                            LastModifiedDate = new DateTime(2024, 12, 15, 17, 4, 26, 426, DateTimeKind.Utc).AddTicks(4901),
                             Login = "JwtIssuer",
                             Password = "mVwmDVr8OwTwnbVwDvi40w==.DWy8ko+AwMzcA/yu2uGVVCiMM2dGdXkWmkn0FGZvkxk=",
                             UserDefined = true

@@ -45,3 +45,15 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Added SQL database insert scripts for initial MusicCollection system and seed data tables.
 
   Reference AppDomainEntityFramework\SQL\01_InsertSystemData.sql and 02_InsertSeedData.sql.
+
+* Created the following MusicCollection database stored procedures and respective migrations.
+
+  Db Proc: GetBandByBandName,           Migration: AddGetBandByBandNameStoredProcedure
+  
+  Db Proc: GetBandMembershipByBandId,   Migration: AddGetBandMembershipByBandIdStoredProcedure
+  
+  Db Proc: GetAlbumsByBandId,           Migration: AddGetAlbumsByBandIdStoredProcedure
+  
+  Db Proc: GetSongListByAlbumId,        Migration: AddGetSongListByAlbumIdStoredProcedure
+
+* Added MusicCollection controller, service and repository classes and endpoints to retrieve "Band by Band Name", "Band Membership by BandId", "Albums by BandId", and "Song List by AlbumId".

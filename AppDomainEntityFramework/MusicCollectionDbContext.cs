@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using AppDomainEntities.Entities;
 using Azure.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AppDomainEntities;
 
@@ -67,6 +68,19 @@ public partial class MusicCollectionDbContext : DbContext
     // (MyClassName : IMyClassName) classes are registered as Transient by ServiceCollectionExtensions.AddServicesWithDefaultConventions().
     //
 
+
+    //public static void ConfigureServices(IServiceCollection services) 
+    //{
+    //    var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
+    //    if (dbConnectionString == null)
+    //    {
+    //        throw new ArgumentNullException(nameof(dbConnectionString));
+    //    }
+    //
+    //    services.AddPooledDbContextFactory<MusicCollectionDbContext>(
+    //        options => options.UseSqlServer(dbConnectionString));
+    //}
+
     public static DbContextOptions<MusicCollectionDbContext> GetDbContextOptions()
     {
         var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
@@ -82,13 +96,6 @@ public partial class MusicCollectionDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         //
-        // DO NOT call "optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING"));"
-        //
-        // See explaination above.
-        //
-
-
-        //
         // Retrieve and validate environment varialbes
         //
         //   To create an environment variable from PowerShell prompt:
@@ -102,6 +109,12 @@ public partial class MusicCollectionDbContext : DbContext
         //
         //   Or, use Azure KeyVault
         //
+
+        if (optionsBuilder.IsConfigured)
+        {
+            // Client code should call MusicCollectionDbContext.GetDbContextOptions()
+            return;
+        }
 
         var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
         if (dbConnectionString == null)

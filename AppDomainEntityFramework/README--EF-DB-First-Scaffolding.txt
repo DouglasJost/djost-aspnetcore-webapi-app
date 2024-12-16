@@ -32,6 +32,11 @@ PM> add-migration SeedUserAccountAndUserLogin
 PM> add-migration UpdatePasswordLength
 PM> add-migration AddedInitialMusicCollectionEntityClasses
 
+PM> add-migration AddGetBandByBandNameStoredProcedure
+PM> add-migration AddGetAlbumsByBandIdStoredProcedure
+PM> add-migration AddGetBandMembershipByBandIdStoredProcedure
+PM> add-migration AddGetSongListByAlbumIdStoredProcedure
+
 
 =================================
 =================================

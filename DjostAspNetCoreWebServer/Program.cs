@@ -143,6 +143,10 @@ namespace DjostAspNetCoreWebServer
             //    .EnableSensitiveDataLogging()
             //);
 
+
+
+
+
             // Add services to the container.
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>

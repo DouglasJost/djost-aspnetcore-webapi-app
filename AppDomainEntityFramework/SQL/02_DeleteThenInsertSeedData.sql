@@ -1,6 +1,6 @@
 ﻿
 -- 
--- Insert Seed Data
+-- Delete then Insert Seed Data
 --
 USE MusicCollectionDB;
 GO
@@ -350,7 +350,7 @@ BEGIN TRY
     )
 
 
-    PRINT '13 Song entries'
+    PRINT '13 SongWriter entries'
     -- A Hard Day's Night
     INSERT INTO SongWriter (SongWriterId, SongId, ArtistId)
     VALUES (
