@@ -5,6 +5,8 @@ using AppServiceCore.Models.MusicCollection;
 using DjostAspNetCoreWebServer.Authentication.Interfaces;
 using DjostAspNetCoreWebServer.Authentication.Models;
 using DjostAspNetCoreWebServer.Authentication.Models.MusicCollection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,10 +17,14 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
     public class MusicCollectionService : IMusicCollectionService
     {
         private readonly IMusicCollectionRepository _musicCollectionRepository;
+        private readonly IDbContextFactory<MusicCollectionDbContext> _dbContextFactory;
 
-        public MusicCollectionService(IMusicCollectionRepository musicCollectionRepository)
+        public MusicCollectionService(
+            IDbContextFactory<MusicCollectionDbContext> dbContextFactory,
+            IMusicCollectionRepository musicCollectionRepository)
         {
-            _musicCollectionRepository = musicCollectionRepository;
+                _dbContextFactory = dbContextFactory;
+                _musicCollectionRepository = musicCollectionRepository;
         }
 
         public async Task<CommandResult<IEnumerable<MusicCollectionBandDto>>> GetBandByBandNameAsync(GetBandByBandNameRequestDto requestDto)
@@ -30,7 +36,8 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
                     return CommandResult<IEnumerable<MusicCollectionBandDto>>.Failure("Band name cannot be null.");
                 }
 
-                using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                //using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
                 {
                     var response = await _musicCollectionRepository.GetBandByBandNameAsync(dbContext, requestDto.BandName);
                     return CommandResult<IEnumerable<MusicCollectionBandDto>>.Success(response);
@@ -54,7 +61,8 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
                     return CommandResult<IEnumerable<MusicCollectionAlbumDto>>.Failure("BandId cannot be an empty GUID.");
                 }
 
-                using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                //using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
                 {
                     var response = await _musicCollectionRepository.GetAlbumsByBandIdAsync(dbContext, requestDto.BandId);
                     return CommandResult<IEnumerable<MusicCollectionAlbumDto>>.Success(response);
@@ -78,7 +86,8 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
                     return CommandResult<IEnumerable<MusicCollectionBandMembershipDto>>.Failure("BandId cannot be an empty GUID.");
                 }
 
-                using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                //using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
                 {
                     var response = await _musicCollectionRepository.GetBandMembershipByBandIdAsync(dbContext, requestDto.BandId);
                     return CommandResult<IEnumerable<MusicCollectionBandMembershipDto>>.Success(response);
@@ -102,7 +111,7 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
                     return CommandResult<IEnumerable<MusicCollectionSongListByAlbumDto>>.Failure("AlbumId cannot be an empty GUID.");
                 }
 
-                using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
                 {
                     var response = await _musicCollectionRepository.GetSongListByAlbumIdAsync(dbContext, requestDto.AlbumId);
                     return CommandResult<IEnumerable<MusicCollectionSongListByAlbumDto>>.Success(response);

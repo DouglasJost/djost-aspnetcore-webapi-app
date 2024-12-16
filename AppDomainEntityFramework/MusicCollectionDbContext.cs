@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using AppDomainEntities.Entities;
-using Azure.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AppDomainEntities;
 
@@ -39,37 +35,73 @@ public partial class MusicCollectionDbContext : DbContext
     {
     }
 
-    //
-    // A design decision was made that ASP.NET Core Dependence Injection would not be used to manage the database context object.
-    // This is why there is no "builder.Services.AddDbContext()" statement in Program.cs in the start up project.
-    //
-    // Instead, it is the responsibility of the "parent service" to wrap an instance of DbContext in a Using() statement and pass
-    // that DbContext to the respective "services" and "repositories" that are part of the respective workflow.  This also means
-    // it is the responsibility of the "parent service" to call DbContext.SaveChanges(), if an insert/update/delete is performed
-    // by the workflow.
-    //
-    // Here is an example of how the "parent service" should manage the DbContext for a given workflow.
-    // ================================================================================================
-    //   using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
-    //   {
-    //       string jwtSecurityToken = await _tokenService.CreateJwtSecurityTokenAsync(dbContext, request.Login, request.Password);
-    //       var response = new SecurityTokenResponseDto
-    //       {
-    //           JwtSecurityToken = jwtSecurityToken,
-    //       };
-    //
-    //       // For demonstrations purposes, SaveChanges() is being called to show where it typically would be called.
-    //       dbContext.SaveChanges();
-    //     
-    //       return CommandResult<SecurityTokenResponseDto>.Success(response);
-    //   }
-    //
-    // Because it is the responsibility of the "parent service" to manage the DbContext for a workflow, all
-    // (MyClassName : IMyClassName) classes are registered as Transient by ServiceCollectionExtensions.AddServicesWithDefaultConventions().
-    //
+    /*
+        A design decision was made not to use the ASP.NET Core Dependence Injection DI to manage the DbContext.
+    
+        Instead, it is the responsibility of the "parent service" to create a DbContext and wrap it in a Using() statement
+        and pass that DbContext to the respective services and repositories that are part of the workflow being implemented.
+    
+        In this way, multiple units of work can be performed within the scope of single HTTP request (scope).  
+    
+        This also means it is the responsibility of the "parent service" to call _dbContext.SaveChangesAsync(), if any inserts,
+        updates and/or deletes are peformed by the workflow.
+
+        Please note, because the "parent service" is managing the DbContext, all (MyClassName: IMyClassName) classes are registered
+        as Transient by ServiceCollectionExtensions.AddServicesWithDefaultConventions().
+    
+
+        In implementing this work flow, the following logic is included in Program.cs to register a factory for creation
+        of DbContext instances.
+
+            var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
+            if (string.IsNullOrWhiteSpace(dbConnectionString))
+            {
+                throw new InvalidOperationException("Db Connection String is not defined.");
+            }
+            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options => options.UseSqlServer(dbConnectionString));
 
 
-    //public static void ConfigureServices(IServiceCollection services) 
+        And, the following logic is included in the "parent service" class, which is where the DbContext is created and managed.
+
+            public class MusicCollectionService : IMusicCollectionService
+            {
+                private readonly IMusicCollectionRepository _musicCollectionRepository;
+                private readonly IDbContextFactory<MusicCollectionDbContext> _dbContextFactory;
+
+                public MusicCollectionService(
+                    IDbContextFactory<MusicCollectionDbContext> dbContextFactory,
+                    IMusicCollectionRepository musicCollectionRepository)
+                {
+                    _dbContextFactory = dbContextFactory;
+                    _musicCollectionRepository = musicCollectionRepository;
+                }
+
+                public async Task<CommandResult<IEnumerable<MusicCollectionBandDto>>> GetBandByBandNameAsync(GetBandByBandNameRequestDto requestDto)
+                {
+                    try 
+                    {
+                        if (requestDto == null || string.IsNullOrWhiteSpace(requestDto.BandName))
+                        {
+                            return CommandResult<IEnumerable<MusicCollectionBandDto>>.Failure("Band name cannot be null.");
+                        }
+
+                        await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
+                        {
+                            var response = await _musicCollectionRepository.GetBandByBandNameAsync(dbContext, requestDto.BandName);
+
+                            // For demo purposes.  Parent is responsible for calling SaveChanges().
+                            await dbContext.SaveChangesAsync();
+
+                            return CommandResult<IEnumerable<MusicCollectionBandDto>>.Success(response);
+                        }
+                    }
+                    ...
+                }
+                ...
+            }
+    */
+
+    //public static DbContextOptions<MusicCollectionDbContext> GetDbContextOptions()
     //{
     //    var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
     //    if (dbConnectionString == null)
@@ -77,22 +109,11 @@ public partial class MusicCollectionDbContext : DbContext
     //        throw new ArgumentNullException(nameof(dbConnectionString));
     //    }
     //
-    //    services.AddPooledDbContextFactory<MusicCollectionDbContext>(
-    //        options => options.UseSqlServer(dbConnectionString));
+    //    var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionDbContext>();
+    //    optionsBuilder.UseSqlServer(dbConnectionString);
+    //    return optionsBuilder.Options;
     //}
 
-    public static DbContextOptions<MusicCollectionDbContext> GetDbContextOptions()
-    {
-        var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
-        if (dbConnectionString == null)
-        {
-            throw new ArgumentNullException(nameof(dbConnectionString));
-        }
-
-        var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionDbContext>();
-        optionsBuilder.UseSqlServer(dbConnectionString);
-        return optionsBuilder.Options;
-    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         //
@@ -112,7 +133,13 @@ public partial class MusicCollectionDbContext : DbContext
 
         if (optionsBuilder.IsConfigured)
         {
-            // Client code should call MusicCollectionDbContext.GetDbContextOptions()
+            // DbContextOptionsBuilder (optionsBuilder) is already configured.
+            // Most likely this was done by a "Parent Service" who is responsible for managing the DbContext.
+            // See description above for an example on how this can be done.
+
+            // For debug purposes, EnableSensitiveDataLogging() can be turned by uncommenting the next statement.
+            //optionsBuilder.EnableSensitiveDataLogging();
+
             return;
         }
 
@@ -211,27 +238,27 @@ public partial class MusicCollectionDbContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
 
-        modelBuilder.Entity<UserAccount>().HasData(
-            new UserAccount
-            {
-                UserAccountId = Guid.Parse("4EC76740-6895-40F4-ABB8-3FBAB440FFF1"),
-                Inactive = false,
-                FirstName = "JWT",
-                LastName = "Issuer",
-                UserDefined = true,
-                LastModifiedDate = DateTime.UtcNow
-            });
-
-        modelBuilder.Entity<UserLogin>().HasData(
-            new UserLogin
-            {
-                UserAccountId = Guid.Parse("4EC76740-6895-40F4-ABB8-3FBAB440FFF1"),
-                Inactive = false,
-                Login = "JwtIssuer",
-                Password = "mVwmDVr8OwTwnbVwDvi40w==.DWy8ko+AwMzcA/yu2uGVVCiMM2dGdXkWmkn0FGZvkxk=",
-                UserDefined = true,
-                LastModifiedDate = DateTime.UtcNow
-            });
+        //modelBuilder.Entity<UserAccount>().HasData(
+        //    new UserAccount
+        //    {
+        //        UserAccountId = Guid.Parse("4EC76740-6895-40F4-ABB8-3FBAB440FFF1"),
+        //        Inactive = false,
+        //        FirstName = "JWT",
+        //        LastName = "Issuer",
+        //        UserDefined = true,
+        //        LastModifiedDate = DateTime.UtcNow
+        //    });
+        //
+        //modelBuilder.Entity<UserLogin>().HasData(
+        //    new UserLogin
+        //    {
+        //        UserAccountId = Guid.Parse("4EC76740-6895-40F4-ABB8-3FBAB440FFF1"),
+        //        Inactive = false,
+        //        Login = "JwtIssuer",
+        //        Password = "mVwmDVr8OwTwnbVwDvi40w==.DWy8ko+AwMzcA/yu2uGVVCiMM2dGdXkWmkn0FGZvkxk=",
+        //        UserDefined = true,
+        //        LastModifiedDate = DateTime.UtcNow
+        //    });
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

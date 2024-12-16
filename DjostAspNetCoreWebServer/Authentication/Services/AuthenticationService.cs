@@ -7,6 +7,8 @@ using Azure;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
 using DjostAspNetCoreWebServer.Authentication.Interfaces;
 using DjostAspNetCoreWebServer.Authentication.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,11 +19,15 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly IDbContextFactory<MusicCollectionDbContext> _dbContextFactory;
         private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.AppLogger);
         private readonly ITokenService _tokenService;
 
-        public AuthenticationService(ITokenService tokenService)
+        public AuthenticationService(
+            IDbContextFactory<MusicCollectionDbContext> dbContextFactory,
+            ITokenService tokenService)
         {
+            _dbContextFactory = dbContextFactory;
             _tokenService = tokenService;
         }
 
@@ -34,7 +40,8 @@ namespace DjostAspNetCoreWebServer.Authentication.Services
                     return CommandResult<SecurityTokenResponseDto>.Failure("Request cannot be null.");
                 }
 
-                using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                //using (var dbContext = new MusicCollectionDbContext(MusicCollectionDbContext.GetDbContextOptions()))
+                await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
                 {
                     string jwtSecurityToken = await _tokenService.CreateJwtSecurityTokenAsync(dbContext, request.Login, request.Password);
                     var response = new SecurityTokenResponseDto

@@ -125,6 +125,7 @@ namespace DjostAspNetCoreWebServer
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
+
             // Add services to the DI container.
             // See extension method ServiceCollectionExtensions.AddServicesWithDefaultConventions for implementation.
             // NOTE: IAutoTypeMapper will be excluded and registered with call to builder.Services.AddTransient().
@@ -136,15 +137,23 @@ namespace DjostAspNetCoreWebServer
             // Explicitly register IAutoTypeMapper open generic type mapping
             builder.Services.AddTransient(typeof(IAutoTypeMapper<,>), typeof(AutoTypeMapper<,>));
 
-            // Setup db connection string - See MusicCollectionDbContext.cs for explaination why "builder.Services.AddDbContext<T>()" is not called.
-            // ==========================
+
             //builder.Services.AddDbContext<MusicCollectionDbContext>(
             //    dbContextOptions => dbContextOptions.UseSqlServer(Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING"))
             //    .EnableSensitiveDataLogging()
             //);
 
-
-
+            // Register DbContext Factory
+            // ==========================
+            //   * Not using ASP.NET Core DI to manage the DbContext.
+            //   * It is the responsibility of the "parent service" to create the DbContext, and manage, and call SaveChangesAsync().
+            //   * Reference MusicCollectonDbContext.cs for an example of how a "parent service" should manage the DbContext.  
+            var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
+            if (string.IsNullOrWhiteSpace(dbConnectionString))
+            {
+                throw new InvalidOperationException("The connection string was not found in the environment variable 'ASPNETCORE_DB_CONNECTION_STRING'.");
+            }
+            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options => options.UseSqlServer(dbConnectionString));
 
 
             // Add services to the container.
@@ -174,6 +183,7 @@ namespace DjostAspNetCoreWebServer
                     ctx.ProblemDetails.Extensions.Add("server", Environment.MachineName);
                 };
             });
+
 
             //
             // Use JWT Bearer Token Authentication.
@@ -216,6 +226,7 @@ namespace DjostAspNetCoreWebServer
                 setupAction.DefaultApiVersion = new ApiVersion(1, 0);
             }).AddMvc();
 
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -231,6 +242,7 @@ namespace DjostAspNetCoreWebServer
 
             // Singleton Application logger that encapsulates Serilog.  
             AppServiceCore.Loggers.AppSerilogLogger.InitializeLogger(Serilog.Log.Logger);
+
 
             // Serilog : capture caller's IP address to include in Serilog logs.
             //app.UseSerilogRequestLogging(options =>
