@@ -22,7 +22,9 @@ namespace AppDomainEntityFramework.Migrations
                     FROM Band b LEFT JOIN Album a on b.BandId = a.BandId
                     LEFT JOIN Genre g on a.GenreId = g.GenreId
 
-                    WHERE b.BandId = @bandId");
+                    WHERE b.BandId = @bandId
+                    
+                    ORDER BY a.ReleaseDate, a.Title");
         }
 
         /// <inheritdoc />

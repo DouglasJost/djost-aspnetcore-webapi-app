@@ -21,11 +21,11 @@ namespace DjostAspNetCoreWebServer.Controllers
             _musicCollectionService = musicCollectionService;
         }
 
-        [Route("GetBandByBandName")]
+        [Route("GetBandsByBandName")]
         [HttpPost]
-        public async Task<IActionResult> GetBandByBandName([FromBody] GetBandByBandNameRequestDto request)
+        public async Task<IActionResult> GetBandsByBandName([FromBody] GetBandsByBandNameRequestDto request)
         {
-            var response = await _musicCollectionService.GetBandByBandNameAsync(request);
+            var response = await _musicCollectionService.GetBandsByBandNameAsync(request);
             return Ok(response);
         }
 
@@ -38,20 +38,20 @@ namespace DjostAspNetCoreWebServer.Controllers
         }
 
 
-        [Route("GetBandMembershipByBandId")]
+        [Route("GetArtistsByBandId")]
         [HttpPost]
-        public async Task<IActionResult> GetBandMembershipByBandId([FromBody] GetBandMembershipByBandIdRequestDto request)
+        public async Task<IActionResult> GetArtistsByBandId([FromBody] GetArtistsByBandIdRequestDto request)
         {
-            var response = await _musicCollectionService.GetBandMembershipByBandIdAsync(request);
+            var response = await _musicCollectionService.GetArtistsByBandIdAsync(request);
             return Ok(response);
         }
 
 
-        [Route("GetSongListByAlbumId")]
+        [Route("GetSongsByAlbumId")]
         [HttpPost]
-        public async Task<IActionResult> GetSongListByAlbumId([FromBody] GetSongListByAlbumIdRequestDto request)
+        public async Task<IActionResult> GetSongsByAlbumId([FromBody] GetSongsByAlbumIdRequestDto request)
         {
-            var response = await _musicCollectionService.GetSongListByAlbumIdAsync(request);
+            var response = await _musicCollectionService.GetSongsByAlbumIdAsync(request);
             return Ok(response);
         }
     }

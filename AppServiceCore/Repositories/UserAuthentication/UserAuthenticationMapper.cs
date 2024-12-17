@@ -2,7 +2,7 @@
 using AppServiceCore.Models.Authentication;
 using AutoMapper;
 
-namespace AppServiceCore.Repositories
+namespace AppServiceCore.Repositories.UserAuthentication
 {
     public class UserAuthenticationMapper : Profile
     {
@@ -19,7 +19,7 @@ namespace AppServiceCore.Repositories
 
         private bool GetUserAccountInactive(UserAccount us)
         {
-            return (us != null) ? us.Inactive : false;  
+            return us != null ? us.Inactive : false;
         }
 
         private string GetUserAccountFirstName(UserAccount us)

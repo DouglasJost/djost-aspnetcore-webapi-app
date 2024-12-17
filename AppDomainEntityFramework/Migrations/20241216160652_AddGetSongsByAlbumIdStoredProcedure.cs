@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppDomainEntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class AddGetSongListByAlbumIdStoredProcedure : Migration
+    public partial class AddGetSongsByAlbumIdStoredProcedure : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-                CREATE PROCEDURE [dbo].[GetSongListByAlbumId] @albumId UNIQUEIDENTIFIER
+                CREATE PROCEDURE [dbo].[GetSongsByAlbumId] @albumId UNIQUEIDENTIFIER
                 AS
                   SELECT a.AlbumId, a.BandId, a.ArtistId, a.title AS AlbumTitle,
                          s.SongId, s.Title AS SongTitle, s.TrackNumber, s.Duration, s.Credits
@@ -28,7 +28,7 @@ namespace AppDomainEntityFramework.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-                DROP PROCEDURE dbo.GetSongListByAlbumId");
+                DROP PROCEDURE dbo.GetSongsByAlbumId");
         }
     }
 }

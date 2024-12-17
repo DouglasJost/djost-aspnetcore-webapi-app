@@ -48,10 +48,10 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Created the following MusicCollection database stored procedures and respective migrations.
 
-  Db Proc: GetBandByBandName,           Migration: AddGetBandByBandNameStoredProcedure
-  Db Proc: GetBandMembershipByBandId,   Migration: AddGetBandMembershipByBandIdStoredProcedure
+  Db Proc: GetBandsByBandName,          Migration: AddGetBandsByBandNameStoredProcedure
+  Db Proc: GetArtistsByBandId,          Migration: AddGetArtistsByBandIdStoredProcedure
   Db Proc: GetAlbumsByBandId,           Migration: AddGetAlbumsByBandIdStoredProcedure
-  Db Proc: GetSongListByAlbumId,        Migration: AddGetSongListByAlbumIdStoredProcedure
+  Db Proc: GetSongsByAlbumId,           Migration: AddGetSongsByAlbumIdStoredProcedure
 
 * Added MusicCollection controller, service and repository classes and endpoints to retrieve "Band by Band Name", "Band Membership by BandId", "Albums by BandId", and "Song List by AlbumId".
 

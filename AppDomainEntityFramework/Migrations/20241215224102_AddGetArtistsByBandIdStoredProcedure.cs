@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppDomainEntityFramework.Migrations
 {
     /// <inheritdoc />
-    public partial class AddGetBandMembershipByBandIdStoredProcedure : Migration
+    public partial class AddGetArtistsByBandIdStoredProcedure : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-                CREATE PROCEDURE [dbo].[GetBandMembershipByBandId] @bandId UNIQUEIDENTIFIER
+                CREATE PROCEDURE [dbo].[GetArtistsByBandId] @bandId UNIQUEIDENTIFIER
                 AS
                   SELECT b.BandId, b.Name AS BandName,
                          a.ArtistId, a.FirstName AS ArtistFirstName, a.LastName AS ArtistLastName,
@@ -30,7 +30,7 @@ namespace AppDomainEntityFramework.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-                DROP PROCEDURE dbo.GetBandMembershipByBandId");
+                DROP PROCEDURE dbo.GetArtistsByBandId");
         }
     }
 }

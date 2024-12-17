@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppDomainEntityFramework.Migrations
 {
     [DbContext(typeof(MusicCollectionDbContext))]
-    [Migration("20241215224102_AddGetBandMembershipByBandIdStoredProcedure")]
-    partial class AddGetBandMembershipByBandIdStoredProcedure
+    [Migration("20241215224102_AddGetArtistsByBandIdStoredProcedure")]
+    partial class AddGetArtistsByBandIdStoredProcedure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

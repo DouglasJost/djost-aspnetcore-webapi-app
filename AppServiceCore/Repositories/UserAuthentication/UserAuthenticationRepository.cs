@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppServiceCore.Repositories
+namespace AppServiceCore.Repositories.UserAuthentication
 {
     public class UserAuthenticationRepository : IUserAuthenticationRepository
     {

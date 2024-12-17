@@ -2,7 +2,7 @@
 
 namespace DjostAspNetCoreWebServer.Authentication.Models.MusicCollection
 {
-    public class GetSongListByAlbumIdRequestDto
+    public class GetSongsByAlbumIdRequestDto
     {
         public Guid AlbumId { get; set; }
     }

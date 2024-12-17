@@ -76,7 +76,7 @@ public partial class MusicCollectionDbContext : DbContext
                     _musicCollectionRepository = musicCollectionRepository;
                 }
 
-                public async Task<CommandResult<IEnumerable<MusicCollectionBandDto>>> GetBandByBandNameAsync(GetBandByBandNameRequestDto requestDto)
+                public async Task<CommandResult<IEnumerable<MusicCollectionBandDto>>> GetBandsByBandNameAsync(GetBandsByBandNameRequestDto requestDto)
                 {
                     try 
                     {
@@ -87,7 +87,7 @@ public partial class MusicCollectionDbContext : DbContext
 
                         await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())
                         {
-                            var response = await _musicCollectionRepository.GetBandByBandNameAsync(dbContext, requestDto.BandName);
+                            var response = await _musicCollectionRepository.GetBandsByBandNameAsync(dbContext, requestDto.BandName);
 
                             // For demo purposes.  Parent is responsible for calling SaveChanges().
                             await dbContext.SaveChangesAsync();

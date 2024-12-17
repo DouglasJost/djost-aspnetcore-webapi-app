@@ -9,12 +9,12 @@ namespace DjostAspNetCoreWebServer.Authentication.Interfaces
 {
     public interface IMusicCollectionService
     {
-        Task<CommandResult<IEnumerable<MusicCollectionBandDto>>> GetBandByBandNameAsync(GetBandByBandNameRequestDto requestDto);
+        Task<CommandResult<IEnumerable<MusicCollectionBandDto>>> GetBandsByBandNameAsync(GetBandsByBandNameRequestDto requestDto);
 
-        Task<CommandResult<IEnumerable<MusicCollectionAlbumDto>>> GetAlbumsByBandIdAsync(GetAlbumsByBandIdRequestDto requestDto);
+        Task<CommandResult<IEnumerable<MusicCollectionBandAlbumsDto>>> GetAlbumsByBandIdAsync(GetAlbumsByBandIdRequestDto requestDto);
 
-        Task<CommandResult<IEnumerable<MusicCollectionBandMembershipDto>>> GetBandMembershipByBandIdAsync(GetBandMembershipByBandIdRequestDto requestDto);
+        Task<CommandResult<IEnumerable<MusicCollectionBandArtistsDto>>> GetArtistsByBandIdAsync(GetArtistsByBandIdRequestDto requestDto);
 
-        Task<CommandResult<IEnumerable<MusicCollectionSongListByAlbumDto>>> GetSongListByAlbumIdAsync(GetSongListByAlbumIdRequestDto requestDto);
+        Task<CommandResult<IEnumerable<MusicCollectionAlbumSongsDto>>> GetSongsByAlbumIdAsync(GetSongsByAlbumIdRequestDto requestDto);
     }
 }
