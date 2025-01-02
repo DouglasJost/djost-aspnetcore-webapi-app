@@ -60,12 +60,12 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
   Db Proc: GetSongsByAlbumId,    
   Migration: AddGetSongsByAlbumIdStoredProcedure
 
-* Added MusicCollection controller, service and repository classes and endpoints to retrieve "Band by Band Name", "Band Membership by BandId", "Albums by BandId", and "Song List by AlbumId".
+* Added MusicCollection controller, service and repository classes and REST endpoints to retrieve "Band by Band Name", "Band Membership by BandId", "Albums by BandId", and "Song List by AlbumId".
 
 * Refactored how DbContext is created.  Added builder.Services.AddDbContextFactory<T> to Program.cs.  And, parent service now calls "await using (var dbContext = await _dbContextFactory.CreateDbContextAsync())" to get a DbContext.  See comments in MusicCollectionDbContext.cs for more information on how a parent service should create and manage it's DbContext.
 
-* Added AddBand, AddBandArtists, AddBandAlbum, end points to MusicCollectionContoller.
+* Added AddBand, AddBandArtists, AddBandAlbum REST endpoints to MusicCollectionContoller.
 
-* Added ExecuteWithTransactionAsync<T> method that executes a provided database operation inside a transaction.  Commits changes if the operation succeeds.  Rolls back changes if an error occurs. Returns a structured result(DbOperationResult<T>) indicating success or failure, along with any data or error messages.  Please reference DbTransactionService.ExecuteWithTransactionAsync<T>. 
+* Added ExecuteWithTransactionAsync<T> method that executes a provided database operation inside a transaction.  Commits changes if the operation succeeds.  Rolls back changes if an error occurs. Returns a structured result (DbOperationResult<T>) indicating success or failure, along with any data or error messages.  Please reference DbTransactionService.ExecuteWithTransactionAsync<T>. 
 
 * Added the custom validation attribute NotEqual.  Custom validation attribute is used to ensure Guid.Empty is not passed to a REST endpoint method.  Please reference AddBandArtistsRequestDto.cs, NotEqualAttribute.cs and MusicCollectionController.AddBandArtists() for an example of how this is implemented.
