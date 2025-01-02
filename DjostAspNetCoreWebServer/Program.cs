@@ -147,13 +147,17 @@ namespace DjostAspNetCoreWebServer
             // ==========================
             //   * Not using ASP.NET Core DI to manage the DbContext.
             //   * It is the responsibility of the "parent service" to create the DbContext, and manage, and call SaveChangesAsync().
-            //   * Reference MusicCollectonDbContext.cs for an example of how a "parent service" should manage the DbContext.  
+            //   * Reference MusicCollectonDbContext.cs for an example of how a "parent service" should manage the DbContext.
+            //   * To add an Interceptor (does not require a migration) 
+            //       options.UserSqlServer(dbConntectionString).AddInterceptors(new MyInterceptor());
+            //
             var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
             if (string.IsNullOrWhiteSpace(dbConnectionString))
             {
                 throw new InvalidOperationException("The connection string was not found in the environment variable 'ASPNETCORE_DB_CONNECTION_STRING'.");
             }
-            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options => options.UseSqlServer(dbConnectionString));
+            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options => 
+                options.UseSqlServer(dbConnectionString));
 
 
             // Add services to the container.

@@ -20,7 +20,7 @@ namespace AppServiceCore.Models.MusicCollection
     public class MusicCollectionBandArtistsDto
     {
         public Guid BandId { get; set; }
-        public string BandName { get; set; } = string.Empty;
+        public string? BandName { get; set; }
 
         public List<MusicCollectionArtistDto> Artists { get; set; } = new List<MusicCollectionArtistDto>();
     }

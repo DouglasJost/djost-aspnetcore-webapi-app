@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
-using DjostAspNetCoreWebServer.Authentication.Interfaces;
-using DjostAspNetCoreWebServer.Authentication.Models;
-using DjostAspNetCoreWebServer.Authentication.Models.MusicCollection;
+using DjostAspNetCoreWebServer.MusicCollection.Interfaces;
+using DjostAspNetCoreWebServer.MusicCollection.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -37,7 +36,6 @@ namespace DjostAspNetCoreWebServer.Controllers
             return Ok(response);
         }
 
-
         [Route("GetArtistsByBandId")]
         [HttpPost]
         public async Task<IActionResult> GetArtistsByBandId([FromBody] GetArtistsByBandIdRequestDto request)
@@ -46,12 +44,35 @@ namespace DjostAspNetCoreWebServer.Controllers
             return Ok(response);
         }
 
-
         [Route("GetSongsByAlbumId")]
         [HttpPost]
         public async Task<IActionResult> GetSongsByAlbumId([FromBody] GetSongsByAlbumIdRequestDto request)
         {
             var response = await _musicCollectionService.GetSongsByAlbumIdAsync(request);
+            return Ok(response);
+        }
+
+        [Route("AddBand")]
+        [HttpPost]
+        public async Task<IActionResult> AddBand([FromBody] AddBandRequestDto request)
+        {
+            var response = await _musicCollectionService.AddBandAsync(request);
+            return Ok(response);
+        }
+
+        [Route("AddBandArtists")]
+        [HttpPost]
+        public async Task<IActionResult> AddBandArtists([FromBody] AddBandArtistsRequestDto request)
+        {
+            var response = await _musicCollectionService.AddBandArtistsAsync(request);
+            return Ok(response);
+        }
+
+        [Route("AddBandAlbum")]
+        [HttpPost]
+        public async Task<IActionResult> AddBandAlbum([FromBody] AddBandAlbumRequestDto request)
+        {
+            var response = await _musicCollectionService.AddBandAlbumAsync(request);
             return Ok(response);
         }
     }

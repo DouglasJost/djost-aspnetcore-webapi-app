@@ -14,11 +14,11 @@ public partial class Artist
 
     [StringLength(255)]
     [Unicode(false)]
-    public string? FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
     [StringLength(255)]
     [Unicode(false)]
-    public string LastName { get; set; } = null!;
+    public string LastName { get; set; } = string.Empty;
 
     public DateOnly? Birthdate { get; set; }
 

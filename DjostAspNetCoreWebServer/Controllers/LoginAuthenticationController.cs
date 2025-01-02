@@ -1,9 +1,7 @@
-﻿using AppServiceCore.Util;
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using DjostAspNetCoreWebServer.Authentication.Interfaces;
 using DjostAspNetCoreWebServer.Authentication.Models;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 using System.Threading.Tasks;
 
 namespace DjostAspNetCoreWebServer.Controllers

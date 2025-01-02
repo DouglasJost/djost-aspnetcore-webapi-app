@@ -15,7 +15,7 @@ namespace AppDomainEntityFramework.Migrations
                 CREATE PROCEDURE [dbo].[GetAlbumsByBandId] @bandId UNIQUEIDENTIFIER
                 AS
                     SELECT 
-                        b.BandId, b.Name AS BandName,  
+                        b.BandId, b.Name AS BandName, a.ArtistId,  
                         a.AlbumId, a.Title AS AlbumTitle, g.Name AS GenreName, 
                         a.RecordingLabel, a.ReleaseDate, a.PlaybackFormat, a.Country
 
