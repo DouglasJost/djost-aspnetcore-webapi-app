@@ -5,6 +5,8 @@ namespace OpenAiChatCompletions.Interfaces
 {
     public interface IOpenAiChatCompletionRepository
     {
-        Task<ChatCompletionResponseDto> GetOpenAiChatCompletionAsync(ChatCompletionRequestDto request);
+        Task<ChatCompletionResponseDto> GetOpenAiChatCompletionAsync(
+          ChatCompletionEntity entity, 
+          ChatCompletionServiceProviderType chatCompletionServiceProvider);
     }
 }

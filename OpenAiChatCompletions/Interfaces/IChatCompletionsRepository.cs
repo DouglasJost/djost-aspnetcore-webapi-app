@@ -9,6 +9,6 @@ namespace OpenAiChatCompletions.Interfaces
     {
         Task<CommandResult<ChatCompletionResponseDto>> GetCompletionAsync(ChatCompletionRequestDto request);
 
-        Task<CommandResult<SoapNoteResponseDto>> GetMedicalSoapNoteAsync();
+        Task<CommandResult<SoapNoteResponseDto>> GetMedicalSoapNoteAsync(SoapNoteRequestDto request);
     }
 }

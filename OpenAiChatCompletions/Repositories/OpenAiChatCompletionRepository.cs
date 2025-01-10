@@ -14,7 +14,9 @@ namespace OpenAiChatCompletions.Repositories
 {
     public class OpenAiChatCompletionRepository : IOpenAiChatCompletionRepository
     {
-        public async Task<ChatCompletionResponseDto> GetOpenAiChatCompletionAsync(ChatCompletionRequestDto request)
+        public async Task<ChatCompletionResponseDto> GetOpenAiChatCompletionAsync(
+          ChatCompletionEntity request,
+          ChatCompletionServiceProviderType chatCompletionServiceProvider)
         {
             //
             // Retrieve and validate environment varialbes
@@ -22,6 +24,8 @@ namespace OpenAiChatCompletions.Repositories
             //   To create an environment variable from PowerShell prompt:
             //     PS>set OPENAI_API_TOKEN=  
             //     PS>set OPENAI_API_URL=
+            //     PS>set AZURE_API_KEY=  
+            //     PS>set AZURE_API_ENDPOINT=
             //      
             //   To Display an enivronment varialbe from PowerShell prompt:
             //     PS>Get-ChildItem Env:
@@ -30,21 +34,39 @@ namespace OpenAiChatCompletions.Repositories
             //
             //   Or, use Azure KeyVault
             //
-            var apiToken = Environment.GetEnvironmentVariable("OPENAI_API_TOKEN");
-            var url = Environment.GetEnvironmentVariable("OPENAI_API_URL");
-            if (string.IsNullOrWhiteSpace(apiToken) || string.IsNullOrWhiteSpace(url))
+            var openAiApiToken = Environment.GetEnvironmentVariable("OPENAI_API_TOKEN");
+            var openAiApiUrl = Environment.GetEnvironmentVariable("OPENAI_API_URL");
+            if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.OpenAI)
             {
+              if (string.IsNullOrWhiteSpace(openAiApiToken) || string.IsNullOrWhiteSpace(openAiApiUrl))
+              {
                 throw new InvalidOperationException("API Token or URL is not configured.");
+              }
+            }
+
+            var azureApiKey = Environment.GetEnvironmentVariable("AZURE_API_KEY");
+            var azureApiEndpoint = Environment.GetEnvironmentVariable("AZURE_API_ENDPOINT");
+            if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.AzureOpenAI)
+            {
+              if (string.IsNullOrWhiteSpace(azureApiKey) || string.IsNullOrWhiteSpace(azureApiEndpoint))
+              {
+                throw new InvalidOperationException("API Key or Endpoint is not configured.");
+              }
             }
 
             var chatCompletionResponse = new ChatCompletionResponseDto();
             var httpClient = GetClient();  // TODO: Add DjostCache : IDjostCache
 
-            // Add API key to the request headers
-            //httpClient.DefaultRequestHeaders.Add("api-key", apiKey);
-
-            // Set Authorization header with Bearer token
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiToken);
+            if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.OpenAI)
+            {
+              // Set Authorization header with Bearer token
+              httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAiApiToken);
+            }
+            else if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.AzureOpenAI)
+            {
+              // Add API key to the request headers
+              httpClient.DefaultRequestHeaders.Add("api-key", azureApiKey);
+            }
 
             // Serialize enum properties to strings instead of their numeric values
             var settings = new JsonSerializerSettings();
@@ -57,6 +79,7 @@ namespace OpenAiChatCompletions.Repositories
             var requestContent = new StringContent(jsonRequestBody, System.Text.Encoding.UTF8, "application/json");
 
             // Send the POST request
+            var url = (chatCompletionServiceProvider == ChatCompletionServiceProviderType.OpenAI) ? openAiApiUrl : azureApiEndpoint;
             var response = await httpClient.PostAsync(url, requestContent);
 
             // Get result

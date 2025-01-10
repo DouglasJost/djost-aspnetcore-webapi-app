@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Identity.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,11 @@ namespace OpenAiChatCompletions.Models.ChatCompletion
         user
     }
 
+    public enum ChatCompletionServiceProviderType
+    {
+      OpenAI,
+      AzureOpenAI
+    }
 
     //
     // TODO : Use FluentValidation
@@ -24,22 +30,33 @@ namespace OpenAiChatCompletions.Models.ChatCompletion
     //
     public class ChatCompletionRequestDto
     {
-        public string model { get; set; } = "gpt-3.5-turbo";
+        public string model { get; set; } = "gpt-4o";
         public List<ChatCompletionMessageDto> messages { get; set; }
         public int? max_tokens { get; set; }
         public decimal? temperature { get; set; }
         public response_format_type? response_format { get; set; }
         public decimal? top_p { get; set; }
-    }
+        public ChatCompletionServiceProviderType chatCompletionServiceProvider { get; set; } = ChatCompletionServiceProviderType.OpenAI;
+  }
 
-    public class ChatCompletionMessageDto
-    {
-        public string content { get; set; }
-        public ChatCompletionRole role { get; set; }
-    }
+  public class ChatCompletionEntity
+  {
+    public string model { get; set; } = "gpt-4o";
+    public List<ChatCompletionMessageDto> messages { get; set; }
+    public int? max_tokens { get; set; }
+    public decimal? temperature { get; set; }
+    public response_format_type? response_format { get; set; }
+    public decimal? top_p { get; set; }
+  }
 
-    public class response_format_type
-    {
-        public string type { get; set; }
-    }
+  public class ChatCompletionMessageDto
+  {
+      public string content { get; set; }
+      public ChatCompletionRole role { get; set; }
+  }
+
+  public class response_format_type
+  {
+      public string type { get; set; }
+  }
 }

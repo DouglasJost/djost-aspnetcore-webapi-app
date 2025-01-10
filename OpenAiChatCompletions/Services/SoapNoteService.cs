@@ -13,15 +13,17 @@ using AppServiceCore.Logging;
 
 namespace OpenAiChatCompletions.Services
 {
-    /*
-        This logic is designed to generate a detailed medical summary (Visit Note) based on conversations between a 
-        patient and a healthcare provider, using an AI-powered completion service.  The transcription of this conversation
-        is sent to an AI-powered service, which responds with structured information that highlights relevant health
-        details, such as symptoms (chief complaint), diagnosis, services preformed, services ordered, medications, and prescribed actions.
-        This structured summary provides organized information that can be easily stored in the patient's medical record.
-    */
+  /*
+      detailed SOAP (subjective, objective, assessment, and plan) notes from doctor-patient transcripts
+         
+      This logic is designed to generate a detailed medical summary (Visit Note) based on conversations between a 
+      patient and a healthcare provider, using an AI-powered completion service.  The transcription of this conversation
+      is sent to an AI-powered service, which responds with structured information that highlights relevant health
+      details, such as symptoms (chief complaint), diagnosis, services preformed, services ordered, medications, and prescribed actions.
+      This structured summary provides organized information that can be easily stored in the patient's medical record.
+  */
 
-    public class SoapNoteService : ISoapNoteService
+  public class SoapNoteService : ISoapNoteService
     {
         private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.OpenAiChatCompletions);
 
@@ -43,7 +45,7 @@ namespace OpenAiChatCompletions.Services
             //    https://platform.openai.com/docs/api-reference/chat/create
             //
 
-            var chatCompletionRequest = new ChatCompletionRequestDto
+            var chatCompletionRequest = new ChatCompletionEntity
             {
                 // max_tokens : integer or null - Optional.  4096 is currently the max value.
                 //
@@ -148,7 +150,8 @@ namespace OpenAiChatCompletions.Services
             {
                 stopwatch.Start();
 
-                var chatCompletionsResponse = await _openAiChatCompletionRepository.GetOpenAiChatCompletionAsync(chatCompletionRequest);
+                var chatCompletionsResponse = await _openAiChatCompletionRepository.GetOpenAiChatCompletionAsync(
+                  chatCompletionRequest, request.ChatCompletionServiceProvider);
 
                 stopwatch.Stop();
 

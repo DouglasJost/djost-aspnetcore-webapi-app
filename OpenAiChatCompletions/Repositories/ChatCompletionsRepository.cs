@@ -5,6 +5,7 @@ using OpenAiChatCompletions.Interfaces;
 using OpenAiChatCompletions.Models.ChatCompletion;
 using OpenAiChatCompletions.Models.MedicalVisitNote;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,17 @@ namespace OpenAiChatCompletions.Repositories
         {
             try
             {
-                var response = await _openAiChatCompletionRepository.GetOpenAiChatCompletionAsync(request);
+                ChatCompletionEntity entity = new ChatCompletionEntity
+                {
+                  model = request.model,
+                  messages = request.messages,
+                  max_tokens = request.max_tokens,
+                  temperature = request.temperature,
+                  response_format = request.response_format,
+                  top_p = request.top_p
+                };
+
+                var response = await _openAiChatCompletionRepository.GetOpenAiChatCompletionAsync(entity, request.chatCompletionServiceProvider);
                 return CommandResult<ChatCompletionResponseDto>.Success(response);
             }
             catch (Exception ex)
@@ -45,15 +56,13 @@ namespace OpenAiChatCompletions.Repositories
             }
         }
 
-        public async Task<CommandResult<SoapNoteResponseDto>> GetMedicalSoapNoteAsync()
+        public async Task<CommandResult<SoapNoteResponseDto>> GetMedicalSoapNoteAsync(SoapNoteRequestDto request)
         {
-            var request = new SoapNoteRequestDto
+            if (string.IsNullOrWhiteSpace(request.TranscriptionText))
             {
-                // TranscriptionText = _visitNoteTranscriptService.GetBasicTranscript(),
-                TranscriptionText = _visitNoteTranscriptService.GetSeriousTranscript(),
-                TranscriptionLanguage = TranscriptionLanguageType.English,
-                VisitId = Guid.Empty
-            };
+              // request.TranscriptionText = _visitNoteTranscriptService.GetSeriousTranscript();
+              request.TranscriptionText = _visitNoteTranscriptService.GetBasicTranscript();
+            }
 
             var response = await _soapNoteService.GetSoapNoteAsync(request);
             return response;

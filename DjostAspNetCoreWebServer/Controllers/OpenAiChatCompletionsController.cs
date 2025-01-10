@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenAiChatCompletions.Interfaces;
 using OpenAiChatCompletions.Models.ChatCompletion;
+using OpenAiChatCompletions.Models.MedicalVisitNote;
 using System.Threading.Tasks;
 
 namespace DjostAspNetCoreWebServer.Controllers.OpenAiChatCompletions
@@ -31,9 +32,9 @@ namespace DjostAspNetCoreWebServer.Controllers.OpenAiChatCompletions
 
         [Route("MedicalSoapNote")]
         [HttpPost]
-        public async Task<IActionResult> GetMedicalSoapNote()
+        public async Task<IActionResult> GetMedicalSoapNote([FromBody] SoapNoteRequestDto request)
         {
-            var result = await _chatCompletionsRepository.GetMedicalSoapNoteAsync();
+            var result = await _chatCompletionsRepository.GetMedicalSoapNoteAsync(request);
             return Ok(result);
         }
     }

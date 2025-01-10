@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenAiChatCompletions.Models.ChatCompletion;
+using System;
 
 namespace OpenAiChatCompletions.Models.MedicalVisitNote
 {
-    public enum TranscriptionLanguageType
+  public enum TranscriptionLanguageType
     {
         English,
         Spanish
@@ -14,8 +11,9 @@ namespace OpenAiChatCompletions.Models.MedicalVisitNote
 
     public class SoapNoteRequestDto
     {
-        public string TranscriptionText { get; set; }
+        public ChatCompletionServiceProviderType ChatCompletionServiceProvider { get; set; } = ChatCompletionServiceProviderType.OpenAI;
+        public string TranscriptionText { get; set; } = string.Empty;
         public TranscriptionLanguageType TranscriptionLanguage { get; set; } = TranscriptionLanguageType.English;
         public Guid? VisitId { get; set; }
-    }
+  }
 }
