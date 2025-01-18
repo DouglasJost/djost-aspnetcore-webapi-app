@@ -72,10 +72,6 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Added ability to submit the Chat Completion request to either OpenAI or Azure OpenAI Services.  AI Vendor is now an input parameter to the respective REST endpoints.
 
-* Added Azure Key Vault Service to retrieve OpenAI API and Azure AI Services API keys.  
+* Added Azure Key Vault Service to retrieve OpenAI API and Azure AI Services API keys.  Program.cs adds Azure Key Vault configuration.  The key vault URL is stored in a local machine environment variable.
 
-  Program.cs adds Azure Key Vault configuration.  The key vault URL is stored in a local machine environment variable.
-
-* Added and enabled a CORS (cross-origin requests) policy to allow HTTP GET, POST, ... requests from local Angular development environment.
-  
-  Program.cs adds the CORS policy, then enables CORS middleware. 
+* Added and enabled a CORS (cross-origin requests) policy to allow HTTP GET, POST, ... requests from local Angular development environment.  Program.cs adds the CORS policy, then enables CORS middleware. 
