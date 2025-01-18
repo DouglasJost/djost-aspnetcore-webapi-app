@@ -8,12 +8,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
 using System.Net.Http.Headers;
+using AppServiceCore.Services.AzureKeyVaultService;
 
 
 namespace OpenAiChatCompletions.Repositories
 {
     public class OpenAiChatCompletionRepository : IOpenAiChatCompletionRepository
     {
+        private readonly AzureKeyVaultService _azureKeyVaultService;
+
+        public OpenAiChatCompletionRepository(AzureKeyVaultService azureKeyVaultService)
+        {
+          _azureKeyVaultService = azureKeyVaultService;
+        }
+
         public async Task<ChatCompletionResponseDto> GetOpenAiChatCompletionAsync(
           ChatCompletionEntity request,
           ChatCompletionServiceProviderType chatCompletionServiceProvider)
@@ -34,8 +42,9 @@ namespace OpenAiChatCompletions.Repositories
             //
             //   Or, use Azure KeyVault
             //
-            var openAiApiToken = Environment.GetEnvironmentVariable("OPENAI_API_TOKEN");
-            var openAiApiUrl = Environment.GetEnvironmentVariable("OPENAI_API_URL");
+
+            string openAiApiToken = await _azureKeyVaultService.GetStringAsync("OPENAI-API-TOKEN");
+            string openAiApiUrl = await _azureKeyVaultService.GetStringAsync("OPENAI-API-URL");
             if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.OpenAI)
             {
               if (string.IsNullOrWhiteSpace(openAiApiToken) || string.IsNullOrWhiteSpace(openAiApiUrl))
@@ -44,8 +53,8 @@ namespace OpenAiChatCompletions.Repositories
               }
             }
 
-            var azureApiKey = Environment.GetEnvironmentVariable("AZURE_API_KEY");
-            var azureApiEndpoint = Environment.GetEnvironmentVariable("AZURE_API_ENDPOINT");
+            string azureApiKey = await _azureKeyVaultService.GetStringAsync("AZURE-API-KEY");
+            string azureApiEndpoint = await _azureKeyVaultService.GetStringAsync("AZURE-API-ENDPOINT");
             if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.AzureOpenAI)
             {
               if (string.IsNullOrWhiteSpace(azureApiKey) || string.IsNullOrWhiteSpace(azureApiEndpoint))
@@ -53,6 +62,26 @@ namespace OpenAiChatCompletions.Repositories
                 throw new InvalidOperationException("API Key or Endpoint is not configured.");
               }
             }
+
+            //var openAiApiToken = Environment.GetEnvironmentVariable("OPENAI_API_TOKEN");
+            //var openAiApiUrl = Environment.GetEnvironmentVariable("OPENAI_API_URL");
+            //if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.OpenAI)
+            //{
+            //  if (string.IsNullOrWhiteSpace(openAiApiToken) || string.IsNullOrWhiteSpace(openAiApiUrl))
+            //  {
+            //    throw new InvalidOperationException("API Token or URL is not configured.");
+            //  }
+            //}
+
+            //var azureApiKey = Environment.GetEnvironmentVariable("AZURE_API_KEY");
+            //var azureApiEndpoint = Environment.GetEnvironmentVariable("AZURE_API_ENDPOINT");
+            //if (chatCompletionServiceProvider == ChatCompletionServiceProviderType.AzureOpenAI)
+            //{
+            //  if (string.IsNullOrWhiteSpace(azureApiKey) || string.IsNullOrWhiteSpace(azureApiEndpoint))
+            //  {
+            //    throw new InvalidOperationException("API Key or Endpoint is not configured.");
+            //  }
+            //}
 
             var chatCompletionResponse = new ChatCompletionResponseDto();
             var httpClient = GetClient();  // TODO: Add DjostCache : IDjostCache

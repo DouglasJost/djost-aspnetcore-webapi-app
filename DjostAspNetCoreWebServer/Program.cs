@@ -16,6 +16,9 @@ using Asp.Versioning;
 using AppDomainEntities;
 using Microsoft.EntityFrameworkCore;
 using AppServiceCore.AutoMapper;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using AppServiceCore.Services.AzureKeyVaultService;
 
 namespace DjostAspNetCoreWebServer
 {
@@ -231,6 +234,27 @@ namespace DjostAspNetCoreWebServer
             }).AddMvc();
 
 
+            // Add Azure Key Vault
+            var keyVaultUrl = Environment.GetEnvironmentVariable("AZURE_KEY_VAULT_URL");
+            if (string.IsNullOrWhiteSpace(keyVaultUrl))
+            {
+              throw new InvalidOperationException("The key vault string was not found in the environment variable 'AZURE_KEY_VAULT_URL'.");
+            }
+            builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
+            builder.Services.AddSingleton(new AzureKeyVaultService(keyVaultUrl));
+
+            // Add CORS policy
+            builder.Services.AddCors(options =>
+            {
+              options.AddPolicy("AllowAngularApp", policy =>
+              {
+                policy.WithOrigins("http://localhost:4200") // Allow requests from Angular app
+                      .AllowAnyHeader()                     // Allow all headers
+                      .AllowAnyMethod();                    // Allow all HTTP methods (GET, POST, etc.)
+              });
+            });
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -269,6 +293,9 @@ namespace DjostAspNetCoreWebServer
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            // Enable CORS middleware
+            app.UseCors("AllowAngularApp");
 
             app.UseAuthentication();
             app.UseAuthorization();  
