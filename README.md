@@ -83,14 +83,15 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Updated Key Vault service to retrieve 'secret value' from environment variable, if web hosting environment IsDevelopment.  Or, from Azure KeyVault, if IsProduction.
 
   Current supported 'secrets' (environment variables, if dev.  or, Azure KeyVault secret, if prod.) are:
-    Authentication-Audience
-    Authentication-Issuer
-    Authentication-SecretForKey
-    Azure-KeyVault-Url
-    ChatCompletions-Azure-OpenAI-Key
-    ChatCompletions-Azure-OpenAI-Url
-    ChatCompletions-OpenAI-Token
-    ChatCompletions-OpenAI-Url
+
+    Authentication-Audience,   
+    Authentication-Issuer,   
+    Authentication-SecretForKey,   
+    Azure-KeyVault-Url,   
+    ChatCompletions-Azure-OpenAI-Key,   
+    ChatCompletions-Azure-OpenAI-Url,   
+    ChatCompletions-OpenAI-Token,   
+    ChatCompletions-OpenAI-Url,   
     DB-Connection-String-MusicCollectionDB
 
 * Updated SQL Insert script to include additional 'seed data' for MusicCollectionDb SQL Server database.
