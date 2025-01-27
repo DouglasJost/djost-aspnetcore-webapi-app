@@ -1,17 +1,13 @@
 ﻿using AppDomainEntities;
 using AppServiceCore;
-using AppServiceCore.Interfaces;
 using AppServiceCore.Logging;
 using AppServiceCore.Util;
-using Azure;
 using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
 using DjostAspNetCoreWebServer.Authentication.Interfaces;
 using DjostAspNetCoreWebServer.Authentication.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 

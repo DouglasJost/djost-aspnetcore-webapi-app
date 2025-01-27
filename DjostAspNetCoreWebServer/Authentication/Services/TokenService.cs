@@ -10,29 +10,29 @@ using DjostAspNetCoreWebServer.Authentication.CustomExceptions;
 using System.Threading.Tasks;
 using AppServiceCore.Interfaces.Authentication;
 using AppDomainEntities;
+using AppServiceCore.Services.KeyVaultService;
 
 namespace DjostAspNetCoreWebServer.Authentication.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration _configuration;
+        private readonly KeyVaultService _keyVaultService;
         private readonly IUserAuthenticationRepository _userAuthenticationRepository;
-        // private readonly IValidateUserRepository _validateUserRepository;
 
         public TokenService(
-            IConfiguration configuration,
+            KeyVaultService keyVaultService,
             IUserAuthenticationRepository userAuthenticationRepository)
         {
-            _configuration = configuration;
+            _keyVaultService = keyVaultService;
             _userAuthenticationRepository = userAuthenticationRepository;
         }
 
         public async Task<string> CreateJwtSecurityTokenAsync(MusicCollectionDbContext dbContext, string? login, string? password)
         {
             // Retrieve authentication attributes from appsettings
-            var base64Secret = _configuration["Authentication:SecretForKey"];
-            var issuer = _configuration["Authentication:Issuer"];
-            var audience = _configuration["Authentication:Audience"];
+            var base64Secret = await _keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.Authentication_SecretForKey);
+            var issuer = await _keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.Authentication_Issuer);
+            var audience = await _keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.Authentication_Audience);
 
             if (string.IsNullOrWhiteSpace(base64Secret) || string.IsNullOrWhiteSpace(issuer) || string.IsNullOrEmpty(audience))
             {

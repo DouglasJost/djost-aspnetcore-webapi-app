@@ -24,14 +24,12 @@ public partial class MusicCollectionDbContext : DbContext
 
     public virtual DbSet<SongWriter> SongWriters { get; set; }
 
-
-
     public MusicCollectionDbContext()
     {
     }
 
     public MusicCollectionDbContext(DbContextOptions<MusicCollectionDbContext> options)
-        : base(options)
+    : base(options)
     {
     }
 
@@ -50,18 +48,10 @@ public partial class MusicCollectionDbContext : DbContext
         as Transient by ServiceCollectionExtensions.AddServicesWithDefaultConventions().
     
 
-        In implementing this work flow, the following logic is included in Program.cs to register a factory for creation
-        of DbContext instances.
+        Reference Program.cs to see how the Db context factory is added.
+        
 
-            var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
-            if (string.IsNullOrWhiteSpace(dbConnectionString))
-            {
-                throw new InvalidOperationException("Db Connection String is not defined.");
-            }
-            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options => options.UseSqlServer(dbConnectionString));
-
-
-        And, the following logic is included in the "parent service" class, which is where the DbContext is created and managed.
+        The following logic shows how the "parent service" should create and manage the db context.
 
             public class MusicCollectionService : IMusicCollectionService
             {
@@ -101,54 +91,23 @@ public partial class MusicCollectionDbContext : DbContext
             }
     */
 
-    //public static DbContextOptions<MusicCollectionDbContext> GetDbContextOptions()
-    //{
-    //    var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
-    //    if (dbConnectionString == null)
-    //    {
-    //        throw new ArgumentNullException(nameof(dbConnectionString));
-    //    }
-    //
-    //    var optionsBuilder = new DbContextOptionsBuilder<MusicCollectionDbContext>();
-    //    optionsBuilder.UseSqlServer(dbConnectionString);
-    //    return optionsBuilder.Options;
-    //}
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //
-        // Retrieve and validate environment varialbes
-        //
-        //   To create an environment variable from PowerShell prompt:
-        //     PS>set OPENAI_API_TOKEN=  
-        //     PS>set OPENAI_API_URL=
-        //      
-        //   To Display an enivronment varialbe from PowerShell prompt:
-        //     PS>Get-ChildItem Env:
-        //
-        //   Or, System Properties > Advanced Tab > Environment Variables 
-        //
-        //   Or, use Azure KeyVault
-        //
-
         if (optionsBuilder.IsConfigured)
         {
-            // DbContextOptionsBuilder (optionsBuilder) is already configured.
+            // DbContextOptionsBuilder is already configured.
             // Most likely this was done by a "Parent Service" who is responsible for managing the DbContext.
-            // See description above for an example on how this can be done.
-
-            // For debug purposes, EnableSensitiveDataLogging() can be turned by uncommenting the next statement.
-            //optionsBuilder.EnableSensitiveDataLogging();
-
             return;
         }
 
-        var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
+        var dbConnectionString = Environment.GetEnvironmentVariable("DB-Connection-String-MusicCollectionDB");
         if (dbConnectionString == null)
         {
             throw new ArgumentNullException(nameof(dbConnectionString));
         }
         optionsBuilder.UseSqlServer(dbConnectionString);
+        optionsBuilder.EnableDetailedErrors();
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

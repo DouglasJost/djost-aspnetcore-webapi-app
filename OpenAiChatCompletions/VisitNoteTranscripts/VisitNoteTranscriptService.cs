@@ -15,6 +15,9 @@ namespace OpenAiChatCompletions.VisitNoteTranscripts
             sbTranscript.Append("Patient : It started out dry, but in the past few days, I've been coughing up some yellowish mucus.");
             sbTranscript.Append("Doctor: Have you noticed any other symptoms, like fever, shortness of breath, or chest pain ?");
             sbTranscript.Append("Patient : No fever, but I do get winded easily when climbing stairs.I’ve also had some mild chest tightness, especially when I lie down.");
+
+            sbTranscript.Append("Doctor: Let's check some vitials.  Your weight is 160 pounds.  Your height is 5 feet 11 inches.  You do have a slight temperature, which is 99°F.");
+
             sbTranscript.Append("Doctor: Have you been around anyone who’s been sick recently?");
             sbTranscript.Append("Patient: Not that I know of, but I did travel last month for work, so I might’ve caught something during the trip.");
             sbTranscript.Append("Doctor: Any allergies, or are you taking any medications ?");

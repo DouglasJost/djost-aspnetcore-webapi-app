@@ -1,6 +1,7 @@
 ﻿using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
 using Asp.Versioning;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -130,7 +131,7 @@ namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
 
         [Route("ConvertFrom12To24HoursFormat")]
         [HttpPost]
-        public IActionResult ConvertFrom12To24HoursFormat(ConvertTimeFormatRequestDto request)
+        public IActionResult ConvertFrom12To24HoursFormat([FromBody] ConvertTimeFormatRequestDto request)
         {
             var result = _AssessmentSuiteService.ConvertFrom12To24HoursFormat(request);
             return Ok(result);
@@ -138,10 +139,18 @@ namespace DjostAspNetCoreWebServer.Controllers.AssessmentSuite
 
         [Route("FormatAlphabetAlternatingCase")]
         [HttpPost]
-        public IActionResult FormatAlphabetAlternatingCase(FormatAlphabetAlternatingCaseRequestDto request)
+        public IActionResult FormatAlphabetAlternatingCase([FromBody] FormatAlphabetAlternatingCaseRequestDto request)
         {
             var result = _AssessmentSuiteService.FormatAlphabetAlternatingCase(request);
             return Ok(result);
+        }
+
+        [Route("AreBracketsBalanced")]
+        [HttpPost]
+        public IActionResult AreBracketsBalanced([FromBody] AreBracketsBalancedRequestDto request)
+        {
+          var result = _AssessmentSuiteService.AreBracketsBalanced(request);
+          return Ok(result);
         }
     }
 }

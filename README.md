@@ -75,3 +75,22 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Added Azure Key Vault Service to retrieve OpenAI API and Azure AI Services API keys.  Program.cs adds Azure Key Vault configuration.  The key vault URL is stored in a local machine environment variable.
 
 * Added and enabled a CORS (cross-origin requests) policy to allow HTTP GET, POST, ... requests from local Angular development environment.  Program.cs adds the CORS policy, then enables CORS middleware. 
+
+* Added Azure SQL Server and Azure SQL database for MusicCollectionDB database.  Azure SQL database is accessed when environment IsProduction.  Local SQL Server database is accessed when environment IsDevelopment.
+
+* Enabled retry on failure to SQL Server options when adding db context factory.  Also, enabled sensitive data logging and enable detailed errors, if web hosting environment IsDevelopment.  Please reference Program.cs for more details.
+
+* Updated Key Vault service to retrieve 'secret value' from environment variable, if web hosting environment IsDevelopment.  Or, from Azure KeyVault, if IsProduction.
+
+  Current supported 'secrets' (environment variables, if dev.  or, Azure KeyVault secret, if prod.) are:
+    Authentication-Audience
+    Authentication-Issuer
+    Authentication-SecretForKey
+    Azure-KeyVault-Url
+    ChatCompletions-Azure-OpenAI-Key
+    ChatCompletions-Azure-OpenAI-Url
+    ChatCompletions-OpenAI-Token
+    ChatCompletions-OpenAI-Url
+    DB-Connection-String-MusicCollectionDB
+
+* Updated SQL Insert script to include additional 'seed data' for MusicCollectionDb SQL Server database.

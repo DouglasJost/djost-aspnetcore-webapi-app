@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using AppServiceCore.Models.AssessmentSuite;
+using System.Collections.Generic;
 
 namespace AppServiceCore.Interfaces.AssessmentSuite
 {
     public interface IArrayCodingQuestionsService
     {
+        public bool AreBracketsBalanced(string testStr);
+
         (string SentenceWithoutSpecialCharacters, string RemovedSpecialCharacters) RemoveSpecialCharacters(string sentence);
 
         string ReverseString(string str);

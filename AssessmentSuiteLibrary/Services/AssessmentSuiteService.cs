@@ -1,6 +1,8 @@
 ﻿using AppServiceCore;
 using AppServiceCore.Interfaces.AssessmentSuite;
 using AppServiceCore.Models.AssessmentSuite;
+using Azure.Core;
+using Azure;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
@@ -10,7 +12,6 @@ namespace AssessmentSuiteLibrary.Services
     public class AssessmentSuiteService : IAssessmentSuiteService
     {
         private readonly IArrayCodingQuestionsService _arrayCodingQuestionsService;
-        private readonly ISpecialCharactersService _specialCharactersService;
         private readonly IIpAddressValidationService _ipAddressValidationService;
         private readonly ILogger<AssessmentSuiteService> _logger;
 
@@ -19,12 +20,10 @@ namespace AssessmentSuiteLibrary.Services
 
         public AssessmentSuiteService(
             IArrayCodingQuestionsService arrayCodingQuestionsService,
-            ISpecialCharactersService specialCharactersService,
             IIpAddressValidationService ipAddressValidationService,
             ILogger<AssessmentSuiteService> logger)
         {
             _arrayCodingQuestionsService = arrayCodingQuestionsService;
-            _specialCharactersService = specialCharactersService;
             _ipAddressValidationService = ipAddressValidationService;
             _logger = logger;
 
@@ -405,6 +404,26 @@ namespace AssessmentSuiteLibrary.Services
             }
 
             return CommandResult<FormatAlphabetAlternatingCaseResponseDto>.Success(response);
+        }
+
+        public CommandResult<AreBracketsBalancedResponseDto> AreBracketsBalanced(AreBracketsBalancedRequestDto request)
+        {
+          var response = new AreBracketsBalancedResponseDto
+          {
+            TestString = request.TestString,
+            AreBalanced = false,
+          };
+
+          try
+          {
+            response.AreBalanced = _arrayCodingQuestionsService.AreBracketsBalanced(request.TestString);
+          }
+          catch (Exception ex)
+          {
+            return CommandResult<AreBracketsBalancedResponseDto>.Failure(ExceptionUtilities.AppendExceptionMessages(ex));
+          }
+
+          return CommandResult<AreBracketsBalancedResponseDto>.Success(response);
         }
     }
 }

@@ -22,19 +22,19 @@ namespace AppDomainEntityFramework.Migrations
                 oldUnicode: false,
                 oldMaxLength: 100);
 
-            migrationBuilder.UpdateData(
-                table: "UserAccount",
-                keyColumn: "UserAccountId",
-                keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
-                column: "LastModifiedDate",
-                value: new DateTime(2024, 12, 6, 5, 51, 8, 39, DateTimeKind.Utc).AddTicks(984));
+            //migrationBuilder.UpdateData(
+            //    table: "UserAccount",
+            //    keyColumn: "UserAccountId",
+            //    keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
+            //    column: "LastModifiedDate",
+            //    value: new DateTime(2024, 12, 6, 5, 51, 8, 39, DateTimeKind.Utc).AddTicks(984));
 
-            migrationBuilder.UpdateData(
-                table: "UserLogin",
-                keyColumn: "UserAccountId",
-                keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
-                column: "LastModifiedDate",
-                value: new DateTime(2024, 12, 6, 5, 51, 8, 39, DateTimeKind.Utc).AddTicks(1054));
+            //migrationBuilder.UpdateData(
+            //    table: "UserLogin",
+            //    keyColumn: "UserAccountId",
+            //    keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
+            //    column: "LastModifiedDate",
+            //    value: new DateTime(2024, 12, 6, 5, 51, 8, 39, DateTimeKind.Utc).AddTicks(1054));
         }
 
         /// <inheritdoc />
@@ -51,19 +51,19 @@ namespace AppDomainEntityFramework.Migrations
                 oldType: "varchar(max)",
                 oldUnicode: false);
 
-            migrationBuilder.UpdateData(
-                table: "UserAccount",
-                keyColumn: "UserAccountId",
-                keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
-                column: "LastModifiedDate",
-                value: new DateTime(2024, 11, 22, 20, 14, 28, 884, DateTimeKind.Utc).AddTicks(8663));
+            //migrationBuilder.UpdateData(
+            //    table: "UserAccount",
+            //    keyColumn: "UserAccountId",
+            //    keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
+            //    column: "LastModifiedDate",
+            //    value: new DateTime(2024, 11, 22, 20, 14, 28, 884, DateTimeKind.Utc).AddTicks(8663));
 
-            migrationBuilder.UpdateData(
-                table: "UserLogin",
-                keyColumn: "UserAccountId",
-                keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
-                column: "LastModifiedDate",
-                value: new DateTime(2024, 11, 22, 20, 14, 28, 884, DateTimeKind.Utc).AddTicks(8738));
+            //migrationBuilder.UpdateData(
+            //    table: "UserLogin",
+            //    keyColumn: "UserAccountId",
+            //    keyValue: new Guid("4ec76740-6895-40f4-abb8-3fbab440fff1"),
+            //    column: "LastModifiedDate",
+            //    value: new DateTime(2024, 11, 22, 20, 14, 28, 884, DateTimeKind.Utc).AddTicks(8738));
         }
     }
 }

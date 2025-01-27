@@ -31,5 +31,7 @@ namespace AppServiceCore.Interfaces.AssessmentSuite
         CommandResult<ConvertTimeFormResponseDto> ConvertFrom12To24HoursFormat(ConvertTimeFormatRequestDto request);
 
         CommandResult<FormatAlphabetAlternatingCaseResponseDto> FormatAlphabetAlternatingCase(FormatAlphabetAlternatingCaseRequestDto request);
+
+        CommandResult<AreBracketsBalancedResponseDto> AreBracketsBalanced(AreBracketsBalancedRequestDto testStr);
     }
 }

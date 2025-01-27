@@ -17,15 +17,15 @@ using AppDomainEntities;
 using Microsoft.EntityFrameworkCore;
 using AppServiceCore.AutoMapper;
 using Azure.Identity;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using AppServiceCore.Services.AzureKeyVaultService;
+using AppServiceCore.Services.KeyVaultService;
+using System.Threading.Tasks;
 
 namespace DjostAspNetCoreWebServer
 {
-    public class Program
+  public class Program
+  {
+    public static async Task Main(string[] args)
     {
-        public static void Main(string[] args)
-        { 
             var builder = WebApplication.CreateBuilder(args);
 
             //
@@ -82,45 +82,50 @@ namespace DjostAspNetCoreWebServer
             // Needed for HttpRequestIpEnricher, so Serilog can capture IP address of caller.
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+
+            //
+            // Add Serilog
+            //
             builder.Host.UseSerilog((context, services, configuration) =>
             {
                 // Reference appsettings.json and appsettings.Development.json for Serilog logger configuration.
                 // Application supports multiple Serilog loggers.
                 configuration.ReadFrom.Configuration(context.Configuration)
-                    .Enrich.FromLogContext()
-                    .Enrich.WithMachineName()
-                    .Enrich.WithExceptionDetails();
+                  .Enrich.FromLogContext()
+                  .Enrich.WithMachineName()
+                  .Enrich.WithExceptionDetails();
 
                 // Apply category-specific Logging.
                 var categoryLoggers = context.Configuration.GetSection("CategorySpecificLogging:Loggers").GetChildren();
                 foreach (var categoryLogger in categoryLoggers)
                 {
                     var name = categoryLogger.GetValue<string>("Name");
-                    var filePath = categoryLogger.GetValue<string>("FilePath");
+                    //var filePath = categoryLogger.GetValue<string>("FilePath");
                     var consoleTemplate = categoryLogger.GetValue<string>("ConsoleOutputTemplate");
-                    var fileTemplate = categoryLogger.GetValue<string>("FileOutputTemplate");
+                    //var fileTemplate = categoryLogger.GetValue<string>("FileOutputTemplate");
                     var filter = categoryLogger.GetValue<string>("Filter");
 
                     // Explicitly parse the MinimumLevel value
                     var minimumLevelString = categoryLogger.GetValue<string>("MinimumLevel");
                     LogEventLevel minimumLevel = Enum.TryParse(minimumLevelString, true, out LogEventLevel parsedLevel)
-                        ? parsedLevel
-                        : LogEventLevel.Information; // Fallback to Information if parsing fails
+                      ? parsedLevel
+                      : LogEventLevel.Information; // Fallback to Information if parsing fails
 
-                    if (name == null || filePath == null || consoleTemplate == null || fileTemplate == null || filter == null)
+                    //if (name == null || filePath == null || consoleTemplate == null || fileTemplate == null || filter == null)
+                    if (name == null || consoleTemplate == null || filter == null)
                     {
                         continue;
                     }
 
                     configuration
-                        .WriteTo.Logger(loggerConfig => loggerConfig
-                            .MinimumLevel.Is(minimumLevel)
-                            .Filter.ByIncludingOnly(logEvent => 
-                                logEvent.Properties.ContainsKey("SourceContext") &&
-                                logEvent.Properties["SourceContext"].ToString().Contains(filter))
-                            // .Enrich.WithProperty("SourceContext", name)  // Use Enrich.WithProperty to add SourceContext for category-specific context
-                            .WriteTo.Console(outputTemplate: consoleTemplate, restrictedToMinimumLevel: minimumLevel)
-                            .WriteTo.File(filePath, outputTemplate: fileTemplate, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: minimumLevel));
+                      .WriteTo.Logger(loggerConfig => loggerConfig
+                        .MinimumLevel.Is(minimumLevel)
+                        .Filter.ByIncludingOnly(logEvent =>
+                          logEvent.Properties.ContainsKey("SourceContext") &&
+                          logEvent.Properties["SourceContext"].ToString().Contains(filter))
+                        // DO NOT UNCOMMENT .Enrich.WithProperty("SourceContext", name)  // Use Enrich.WithProperty to add SourceContext for category-specific context
+                        .WriteTo.Console(outputTemplate: consoleTemplate, restrictedToMinimumLevel: minimumLevel));
+                        //.WriteTo.File(filePath, outputTemplate: fileTemplate, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: minimumLevel));
                 }
             });
 
@@ -129,7 +134,9 @@ namespace DjostAspNetCoreWebServer
             builder.Logging.AddDebug();
 
 
+            //
             // Add services to the DI container.
+            //
             // See extension method ServiceCollectionExtensions.AddServicesWithDefaultConventions for implementation.
             // NOTE: IAutoTypeMapper will be excluded and registered with call to builder.Services.AddTransient().
             builder.Services.AddServicesWithDefaultConventions();
@@ -141,35 +148,70 @@ namespace DjostAspNetCoreWebServer
             builder.Services.AddTransient(typeof(IAutoTypeMapper<,>), typeof(AutoTypeMapper<,>));
 
 
-            //builder.Services.AddDbContext<MusicCollectionDbContext>(
-            //    dbContextOptions => dbContextOptions.UseSqlServer(Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING"))
-            //    .EnableSensitiveDataLogging()
-            //);
+            //
+            // Add Azure Key Vault
+            //
+            var keyVaultUrl = Environment.GetEnvironmentVariable(KeyVaultSecretNames.Azure_KeyVault_Url)
+                ?? builder.Configuration[KeyVaultSecretNames.Azure_KeyVault_Url];
+            var environment = builder.Environment.IsDevelopment() ? "DEV" : "PROD";
 
+            environment = "PROD";
+
+            if (string.IsNullOrWhiteSpace(keyVaultUrl))
+            {
+                throw new InvalidOperationException("The key vault URL is not defined.");
+            }
+            if (string.IsNullOrWhiteSpace(environment))
+            {
+                throw new InvalidOperationException("The host environment is not defined.");
+            }
+            builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
+            builder.Services.AddSingleton(new KeyVaultService(keyVaultUrl, environment));
+
+            var keyVaultService = new KeyVaultService(keyVaultUrl, environment);
+
+
+            //
             // Register DbContext Factory
-            // ==========================
+            // 
             //   * Not using ASP.NET Core DI to manage the DbContext.
             //   * It is the responsibility of the "parent service" to create the DbContext, and manage, and call SaveChangesAsync().
             //   * Reference MusicCollectonDbContext.cs for an example of how a "parent service" should manage the DbContext.
             //   * To add an Interceptor (does not require a migration) 
             //       options.UserSqlServer(dbConntectionString).AddInterceptors(new MyInterceptor());
             //
-            var dbConnectionString = Environment.GetEnvironmentVariable("ASPNETCORE_DB_CONNECTION_STRING");
+            var dbConnectionString = await keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.DB_Connection_String_MusicCollectionDB);
             if (string.IsNullOrWhiteSpace(dbConnectionString))
             {
                 throw new InvalidOperationException("The connection string was not found in the environment variable 'ASPNETCORE_DB_CONNECTION_STRING'.");
             }
-            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options => 
-                options.UseSqlServer(dbConnectionString));
+            builder.Services.AddDbContextFactory<MusicCollectionDbContext>(options =>
+            {
+                options.UseSqlServer(dbConnectionString, sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,                        // Maximum retry attempts
+                        maxRetryDelay: TimeSpan.FromSeconds(10), // Max delay between retries
+                        errorNumbersToAdd: null                  // Additional SQL error numbers to consider transient
+                    );
+                });
+
+                if (builder.Environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                    options.EnableDetailedErrors();
+                }
+            });
 
 
             // Add services to the container.
             builder.Services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    // Add JsonStringEnumConverter to handle enum string conversion.
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
+              .AddJsonOptions(options =>
+              {
+                  // Add JsonStringEnumConverter to handle enum string conversion.
+                  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+              });
+
 
             builder.Services.AddControllers(options =>
             {
@@ -180,6 +222,7 @@ namespace DjostAspNetCoreWebServer
                 // Add AuthenticationExceptionFilter to handle authentication exceptions.
                 options.Filters.Add<AuthenticationExceptionFilter>();
             });
+
 
             // Enable standardized exception error responses for HTTP APIs.  Includes type, title, status, detail, instance
             builder.Services.AddProblemDetails(options =>
@@ -193,39 +236,37 @@ namespace DjostAspNetCoreWebServer
 
 
             //
-            // Use JWT Bearer Token Authentication.
-            // ====================================
-            //   NuGet package : Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11"
+            // JWT Bearer Token Authentication
             //
+            var authenticationSecretForKey = await keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.Authentication_SecretForKey);
+            var authenticationIssuer = await keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.Authentication_Issuer);
+            var authenticationAudience = await keyVaultService.GetSecretValueAsync(KeyVaultSecretNames.Authentication_Audience);
             builder.Services.AddAuthentication("Bearer")
-                // Configure the JWT.  Reference appsettings.json / appsettings.Development.json for JWT configuration.
-                .AddJwtBearer(options =>
-                    {
-                        // secretForKey used assigning key object value for JWT validation to IssuerSigningKey.
-                        var secretForKey = builder.Configuration["Authentication:SecretForKey"] 
-                            ?? throw new BadRequestException("Authentication configuration values are missing");
-
-                        // Validation rules for incoming tokens
-                        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                        {
-                            // Verify tokens's iss (issuer) claim against trusted issuer.
-                            ValidateIssuer = true,
-                            // Verify tokens's aud (audience) claim matches this application's audience. 
-                            ValidateAudience = true,
-                            // Validate that the token's signature is correct by using a trusted signing key.
-                            ValidateIssuerSigningKey = true,
-                            // Only tokens issued by this issuer are accepted.
-                            ValidIssuer = builder.Configuration["Authentication:Issuer"],
-                            // Only tokens intended for this audience are accepted.
-                            ValidAudience = builder.Configuration["Authentication:Audience"],
-                            // This is the security key used to validate the token's signature.
-                            IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(secretForKey))
-                        };
-                    }
-                );
+            // Configure the JWT.  Reference appsettings.json / appsettings.Development.json for JWT configuration.
+            .AddJwtBearer(options =>
+            {
+                // Validation rules for incoming tokens
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                // Verify tokens's iss (issuer) claim against trusted issuer.
+                ValidateIssuer = true,
+                // Verify tokens's aud (audience) claim matches this application's audience. 
+                ValidateAudience = true,
+                // Validate that the token's signature is correct by using a trusted signing key.
+                ValidateIssuerSigningKey = true,
+                // Only tokens issued by this issuer are accepted.
+                ValidIssuer = authenticationIssuer,
+                // Only tokens intended for this audience are accepted.
+                ValidAudience = authenticationAudience,
+                // This is the security key used to validate the token's signature.
+                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(authenticationSecretForKey))
+                };
+            });
 
 
+            //
             // Configure API Versioning
+            //
             builder.Services.AddApiVersioning(setupAction =>
             {
                 setupAction.ReportApiVersions = true;
@@ -234,24 +275,17 @@ namespace DjostAspNetCoreWebServer
             }).AddMvc();
 
 
-            // Add Azure Key Vault
-            var keyVaultUrl = Environment.GetEnvironmentVariable("AZURE_KEY_VAULT_URL");
-            if (string.IsNullOrWhiteSpace(keyVaultUrl))
-            {
-              throw new InvalidOperationException("The key vault string was not found in the environment variable 'AZURE_KEY_VAULT_URL'.");
-            }
-            builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
-            builder.Services.AddSingleton(new AzureKeyVaultService(keyVaultUrl));
-
+            //
             // Add CORS policy
+            //
             builder.Services.AddCors(options =>
             {
-              options.AddPolicy("AllowAngularApp", policy =>
-              {
-                policy.WithOrigins("http://localhost:4200") // Allow requests from Angular app
-                      .AllowAnyHeader()                     // Allow all headers
-                      .AllowAnyMethod();                    // Allow all HTTP methods (GET, POST, etc.)
-              });
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200") // Allow requests from Angular app
+                        .AllowAnyHeader()                     // Allow all headers
+                        .AllowAnyMethod();                    // Allow all HTTP methods (GET, POST, etc.)
+                });
             });
 
 
@@ -271,7 +305,6 @@ namespace DjostAspNetCoreWebServer
             // Singleton Application logger that encapsulates Serilog.  
             AppServiceCore.Loggers.AppSerilogLogger.InitializeLogger(Serilog.Log.Logger);
 
-
             // Serilog : capture caller's IP address to include in Serilog logs.
             //app.UseSerilogRequestLogging(options =>
             //{
@@ -282,10 +315,12 @@ namespace DjostAspNetCoreWebServer
             //    };
             //});
 
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler();
             }
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -294,15 +329,20 @@ namespace DjostAspNetCoreWebServer
                 app.UseSwaggerUI();
             }
 
+
+            //
             // Enable CORS middleware
+            //
             app.UseCors("AllowAngularApp");
+
 
             app.UseAuthentication();
             app.UseAuthorization();  
 
+
             app.MapControllers();
 
             app.Run();
-        }
     }
+  }
 }
