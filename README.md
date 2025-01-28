@@ -82,7 +82,7 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Updated Key Vault service to retrieve 'secret value' from environment variable, if web hosting environment IsDevelopment.  Or, from Azure KeyVault, if IsProduction.
 
-  Current supported 'secrets' (environment variables, if dev.  or, Azure KeyVault secret, if prod.) are:
+  Current supported 'secrets' (environment variables, if dev.  or, Azure KeyVault, if prod.) are:
 
     Authentication-Audience,   
     Authentication-Issuer,   
@@ -95,3 +95,5 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
     DB-Connection-String-MusicCollectionDB
 
 * Updated SQL Insert script to include additional 'seed data' for MusicCollectionDb SQL Server database.
+
+* Added GitHub Actions Actions workflow (deploy.yml) for Azure deployment.  And, created the respective GitHub repository secrets, too.

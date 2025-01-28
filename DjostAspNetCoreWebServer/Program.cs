@@ -155,7 +155,7 @@ namespace DjostAspNetCoreWebServer
                 ?? builder.Configuration[KeyVaultSecretNames.Azure_KeyVault_Url];
             var environment = builder.Environment.IsDevelopment() ? "DEV" : "PROD";
 
-            environment = "PROD";
+             // environment = "PROD";
 
             if (string.IsNullOrWhiteSpace(keyVaultUrl))
             {
