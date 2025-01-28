@@ -11,6 +11,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }} 
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -30,9 +38,4 @@ jobs:
       with:
         app-name: djost-aspnetcore-poc-app
         slot-name: production
-        azure-rg: djost-ai-services-poc-resource-group
-        azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         package: ./publish
