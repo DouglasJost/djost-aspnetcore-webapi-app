@@ -3,6 +3,10 @@ name: Manual Deploy to Azure Web App
 on:
   workflow_dispatch: # Allows manual triggering
 
+permissions:
+  contents: read
+  id-token: write # Grant necessary permissions for Azure Login
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
