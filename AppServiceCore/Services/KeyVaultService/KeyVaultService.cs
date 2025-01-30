@@ -50,10 +50,10 @@ namespace AppServiceCore.Services.KeyVaultService
             {
                 string secretValue;
 
-                if (_environment == "DEV")
+                if (_environment == "DEVELOPMENT")
                 {
                     secretValue = Environment.GetEnvironmentVariable(secretName)
-                    ?? throw new InvalidOperationException($"The environment variable '{secretName}' is not set in the DEV environment.");
+                    ?? throw new InvalidOperationException($"The environment variable '{secretName}' is not set in the Development environment.");
                 }
                 else
                 {

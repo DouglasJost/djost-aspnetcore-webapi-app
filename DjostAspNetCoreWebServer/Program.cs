@@ -153,22 +153,25 @@ namespace DjostAspNetCoreWebServer
             //
             var keyVaultUrl = Environment.GetEnvironmentVariable(KeyVaultSecretNames.Azure_KeyVault_Url)
                 ?? builder.Configuration[KeyVaultSecretNames.Azure_KeyVault_Url];
-            var environment = builder.Environment.IsDevelopment() ? "DEV" : "PROD";
 
-             // environment = "PROD";
+            var kvEnvironment = Environment.GetEnvironmentVariable("Azure-KeyVault-Environment");
+            if (string.IsNullOrEmpty(kvEnvironment))
+            {
+                kvEnvironment = builder.Environment.IsDevelopment() ? "Development" : "Production";
+            }
 
             if (string.IsNullOrWhiteSpace(keyVaultUrl))
             {
                 throw new InvalidOperationException("The key vault URL is not defined.");
             }
-            if (string.IsNullOrWhiteSpace(environment))
+            if (string.IsNullOrWhiteSpace(kvEnvironment))
             {
-                throw new InvalidOperationException("The host environment is not defined.");
+                throw new InvalidOperationException("The host Key Vault environment is not defined.");
             }
             builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
-            builder.Services.AddSingleton(new KeyVaultService(keyVaultUrl, environment));
+            builder.Services.AddSingleton(new KeyVaultService(keyVaultUrl, kvEnvironment));
 
-            var keyVaultService = new KeyVaultService(keyVaultUrl, environment);
+            var keyVaultService = new KeyVaultService(keyVaultUrl, kvEnvironment);
 
 
             //

@@ -28,11 +28,18 @@ jobs:
     - name: Install Dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore
+# Uncomment below lines to deploy in Release mode
+#    - name: Build (Release)
+#      run: dotnet build --configuration Release --no-restore
+#
+#    - name: Publish (Release)
+#      run: dotnet publish -c Release --output ./publish
 
-    - name: Publish
-      run: dotnet publish -c Release -o ./publish
+    - name: Build (Debug)
+      run: dotnet build --configuration Debug --no-restore
+ 
+    - name: Publish (Debug)
+      run: dotnet publish --configuration Debug --output ./publish
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
