@@ -7,6 +7,9 @@ permissions:
   contents: read
   id-token: write # Grant necessary permissions for Azure Login
 
+env:
+  BUILD_CONFIGURATION: ${{ secrets.BUILD_CONFIGURATION }} # Global environment variable for build config
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -28,18 +31,18 @@ jobs:
     - name: Install Dependencies
       run: dotnet restore
 
-    # Conditional Build Step (Debug or Release)
+    # Build Step (Uses Global Environment Variable - Debug or Release) 
     - name: Build
-      run: dotnet build -c ${{ secrets.BUILD_CONFIGURATION }} --no-restore
+      run: dotnet build -c $BUILD_CONFIGURATION --no-restore
 
-    # Publish for Debug with Full Debug Info
-    - name: Publish (Debug)
-      if: ${{ secrets.BUILD_CONFIGURATION == 'Debug' }}
+    # Conditional Publish Step (Debug)
+    - name: Publish Debug
+      if: env.BUILD_CONFIGURATION == 'Debug'
       run: dotnet publish -c Debug --output ./publish --p:DebugType=full
 
-    # Publish for Release (Default)
-    - name: Publish (Release)
-      if: ${{ secrets.BUILD_CONFIGURATION == 'Release' }}
+    # Conditional Publish Step (Release)
+    - name: Publish Release
+      if: env.BUILD_CONFIGURATION == 'Release'
       run: dotnet publish -c Release --output ./publish
   
     - name: Deploy to Azure Web App
