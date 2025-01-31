@@ -80,9 +80,9 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Enabled retry on failure to SQL Server options when adding db context factory.  Also, enabled sensitive data logging and enable detailed errors, if web hosting environment IsDevelopment.  Please reference Program.cs for more details.
 
-* Updated Key Vault service to retrieve 'secret value' from environment variable, if web hosting environment IsDevelopment.  Or, from Azure KeyVault, if IsProduction.
+* Updated Key Vault service to retrieve 'secret value' from environment variable, if environment is development.  Or, Azure KeyVault, if environment is production.
 
-  Current supported 'secrets' (environment variables, if dev.  or, Azure KeyVault, if prod.) are:
+  Current environment variables (if development) and Azure KeyVault names (if production) are:
 
     Authentication-Audience,   
     Authentication-Issuer,   
