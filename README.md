@@ -96,4 +96,6 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Updated SQL Insert script to include additional 'seed data' for MusicCollectionDb SQL Server database.
 
-* Added GitHub Actions Actions workflow (deploy.yml) for Azure deployment.  And, created the respective GitHub repository secrets, too.
+* Added GitHub actions workflow file (deploy.yml) for Azure deployment.  Added GitHub repository secret variable AZURE_CREDENTIALS for Login to Azure.
+
+* Updated GitHub actions workflow file to either build and publish Debug or Release mode based on GitHub repository secret variable BUILD_CONFIGURATION.
