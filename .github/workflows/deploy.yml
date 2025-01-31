@@ -32,9 +32,15 @@ jobs:
     - name: Build
       run: dotnet build -c ${{ secrets.BUILD_CONFIGURATION }} --no-restore
 
-    # Conditional Publish Step (Debug or Release)
-    - name: Publish
-      run: dotnet publish -c ${{ secrets.BUILD_CONFIGURATION }} --output ./publish
+    # Publish for Debug with Full Debug Info
+    - name: Publish (Debug)
+      if: ${{ secrets.BUILD_CONFIGURATION == 'Debug' }}
+      run: dotnet publish -c Debug --output ./publish --p:DebugType=full
+
+    # Publish for Release (Default)
+    - name: Publish (Release)
+      if: ${{ secrets.BUILD_CONFIGURATION == 'Release' }}
+      run: dotnet publish -c Release --output ./publish
   
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
