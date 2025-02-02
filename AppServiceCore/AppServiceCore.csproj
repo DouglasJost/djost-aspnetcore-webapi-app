@@ -6,6 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Disable Optimizations and Enable Full Debugging for Debug Builds -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+      <DebugType>full</DebugType>
+      <Optimize>false</Optimize>
+      <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.2" />

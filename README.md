@@ -98,4 +98,6 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 
 * Added GitHub actions workflow file (deploy.yml) for Azure deployment.  Added GitHub repository secret variable AZURE_CREDENTIALS for Login to Azure.
 
-* Updated GitHub actions workflow file to either build and publish Debug or Release mode based on GitHub repository secret variable BUILD_CONFIGURATION.
+* Updated GitHub actions workflow file to either build and publish Debug or Release based on GitHub repository secret variable BUILD_CONFIGURATION.
+
+* Disabled optimizations and enable full debugging for debug builds.

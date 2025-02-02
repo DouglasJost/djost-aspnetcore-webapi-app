@@ -6,6 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Disable Optimizations and Enable Full Debugging for Debug Builds -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\AppServiceCore\AppServiceCore.csproj" />
   </ItemGroup>

@@ -7,6 +7,13 @@
     <UserSecretsId>9810f457-7a22-4298-819e-b1c77e9bbf70</UserSecretsId>
   </PropertyGroup>
 
+  <!-- Disable Optimizations and Enable Full Debugging for Debug Builds -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <TieredCompilation>false</TieredCompilation>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
