@@ -67,9 +67,9 @@ namespace AppServiceCore.Repositories.MusicCollection
             var mappedBands = bandsByBandNameResult.ToList();
             Debug.WriteLine($"Before Mapping: {JsonConvert.SerializeObject(mappedBands)}");
 
-            if (bandsByBandNameResult != null) 
+            if (mappedBands != null) 
             {
-                foreach (var band in bandsByBandNameResult)
+                foreach (var band in mappedBands)
                 {
                     responseDto.Add(_bandResultToBandDtoMapper.Map(band));
                 }
