@@ -10,7 +10,7 @@
   <!-- Disable Optimizations and Enable Full Debugging for Debug Builds -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <TieredCompilation>false</TieredCompilation>
   </PropertyGroup>
 
