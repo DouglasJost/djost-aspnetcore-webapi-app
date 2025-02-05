@@ -5,9 +5,11 @@ using AppServiceCore.Interfaces.MusicCollection;
 using AppServiceCore.Models.MusicCollection;
 using AppServiceCore.Services.DbTransactionService;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -60,6 +62,11 @@ namespace AppServiceCore.Repositories.MusicCollection
             }
 
             List<MusicCollectionBandResult> bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+
+            // Ensure the result is fully materialized before mapping
+            var mappedBands = bandsByBandNameResult.ToList();
+            Debug.WriteLine($"Before Mapping: {JsonConvert.SerializeObject(mappedBands)}");
+
             if (bandsByBandNameResult != null) 
             {
                 foreach (var band in bandsByBandNameResult)
@@ -68,6 +75,7 @@ namespace AppServiceCore.Repositories.MusicCollection
                 }
             }
 
+            Debug.WriteLine($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
             return responseDto;
         }
 
