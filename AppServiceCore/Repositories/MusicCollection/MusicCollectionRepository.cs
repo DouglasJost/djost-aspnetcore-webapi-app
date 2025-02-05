@@ -18,6 +18,9 @@ namespace AppServiceCore.Repositories.MusicCollection
 {
     public class MusicCollectionRepository : IMusicCollectionRepository
     {
+        private List<MusicCollectionBandResult>? _bandsByBandNameResult;  // Persistent field
+        private IEnumerable<MusicCollectionBandDto>? _nonAsyncDto;        // Persistent field        
+
         private readonly IDbTransactionService _dbTransactionService;
         private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.AppLogger);
 
@@ -61,10 +64,11 @@ namespace AppServiceCore.Repositories.MusicCollection
                 return responseDto;
             }
 
-            var bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+            // var bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+            _bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
 
             // Ensure the result is fully materialized before mapping
-            var mappedBands = bandsByBandNameResult.ToList();
+            var mappedBands = _bandsByBandNameResult.ToList();
             Debug.WriteLine($"mappedBands After ToList() : {JsonConvert.SerializeObject(mappedBands)}");
             _logger.LogInformation($"mappedBands After ToList() : {JsonConvert.SerializeObject(mappedBands)}");
 
@@ -83,9 +87,10 @@ namespace AppServiceCore.Repositories.MusicCollection
             Debug.WriteLine($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
             _logger.LogInformation($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
 
-            var nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName).ToList();
-            Debug.WriteLine($"nonAsyncDto: {JsonConvert.SerializeObject(nonAsyncDto)}");
-            _logger.LogInformation($"nonAsyncDto: {JsonConvert.SerializeObject(nonAsyncDto)}");
+            // var nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName).ToList();
+            _nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName).ToList();
+            Debug.WriteLine($"nonAsyncDto: {JsonConvert.SerializeObject(_nonAsyncDto)}");
+            _logger.LogInformation($"nonAsyncDto: {JsonConvert.SerializeObject(_nonAsyncDto)}");
 
             return responseDto;
         }
