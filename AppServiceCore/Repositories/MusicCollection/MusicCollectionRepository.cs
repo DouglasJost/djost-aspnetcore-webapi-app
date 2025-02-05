@@ -61,7 +61,7 @@ namespace AppServiceCore.Repositories.MusicCollection
                 return responseDto;
             }
 
-            List<MusicCollectionBandResult> bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+            var bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
 
             // Ensure the result is fully materialized before mapping
             var mappedBands = bandsByBandNameResult.ToList();
@@ -71,8 +71,6 @@ namespace AppServiceCore.Repositories.MusicCollection
             var debugBands = mappedBands.ToList();
             Debug.WriteLine($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
             _logger.LogInformation($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
-            
-            Debugger.Break();
 
             if (mappedBands != null) 
             {
@@ -85,8 +83,9 @@ namespace AppServiceCore.Repositories.MusicCollection
             Debug.WriteLine($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
             _logger.LogInformation($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
 
-            var nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName);
-            Debugger.Break();
+            var nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName).ToList();
+            Debug.WriteLine($"nonAsyncDto: {JsonConvert.SerializeObject(nonAsyncDto)}");
+            _logger.LogInformation($"nonAsyncDto: {JsonConvert.SerializeObject(nonAsyncDto)}");
 
             return responseDto;
         }
@@ -101,9 +100,7 @@ namespace AppServiceCore.Repositories.MusicCollection
             }
 
             List<MusicCollectionBandResult> bandsByBandNameResult = dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToList();
-
             _logger.LogInformation($"Bands Result: {JsonConvert.SerializeObject(bandsByBandNameResult)}");
-            Debugger.Break();
 
             if (bandsByBandNameResult != null)
             {
