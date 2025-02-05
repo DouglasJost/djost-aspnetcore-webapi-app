@@ -71,6 +71,7 @@ namespace AppServiceCore.Repositories.MusicCollection
             var debugBands = mappedBands.ToList();
             Debug.WriteLine($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
             _logger.LogInformation($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
+            
             Debugger.Break();
 
             if (mappedBands != null) 
@@ -83,6 +84,35 @@ namespace AppServiceCore.Repositories.MusicCollection
 
             Debug.WriteLine($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
             _logger.LogInformation($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
+
+            var nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName);
+            Debugger.Break();
+
+            return responseDto;
+        }
+
+        public IEnumerable<MusicCollectionBandDto> GetBandsByBandNameSync(MusicCollectionDbContext dbContext, string bandName)
+        {
+            var responseDto = new List<MusicCollectionBandDto>();
+
+            if (string.IsNullOrWhiteSpace(bandName))
+            {
+                return responseDto;
+            }
+
+            List<MusicCollectionBandResult> bandsByBandNameResult = dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToList();
+
+            _logger.LogInformation($"Bands Result: {JsonConvert.SerializeObject(bandsByBandNameResult)}");
+            Debugger.Break();
+
+            if (bandsByBandNameResult != null)
+            {
+                foreach (var band in bandsByBandNameResult)
+                {
+                    responseDto.Add(_bandResultToBandDtoMapper.Map(band));
+                }
+            }
+
             return responseDto;
         }
 
