@@ -2,24 +2,24 @@
 using AppDomainEntities.Entities;
 using AppServiceCore.AutoMapper;
 using AppServiceCore.Interfaces.MusicCollection;
+using AppServiceCore.Logging;
 using AppServiceCore.Models.MusicCollection;
 using AppServiceCore.Services.DbTransactionService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace AppServiceCore.Repositories.MusicCollection
 {
     public class MusicCollectionRepository : IMusicCollectionRepository
     {
         private readonly IDbTransactionService _dbTransactionService;
+        private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.AppLogger);
 
         private readonly IAutoTypeMapper<MusicCollectionBandResult, MusicCollectionBandDto> _bandResultToBandDtoMapper;
         private readonly IAutoTypeMapper<MusicCollectionBandDto, AppDomainEntities.Entities.Band> _bandDtoToBandEntityMapper;
@@ -65,7 +65,13 @@ namespace AppServiceCore.Repositories.MusicCollection
 
             // Ensure the result is fully materialized before mapping
             var mappedBands = bandsByBandNameResult.ToList();
-            Debug.WriteLine($"Before Mapping: {JsonConvert.SerializeObject(mappedBands)}");
+            Debug.WriteLine($"mappedBands After ToList() : {JsonConvert.SerializeObject(mappedBands)}");
+            _logger.LogInformation($"mappedBands After ToList() : {JsonConvert.SerializeObject(mappedBands)}");
+
+            var debugBands = mappedBands.ToList();
+            Debug.WriteLine($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
+            _logger.LogInformation($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
+            Debugger.Break();
 
             if (mappedBands != null) 
             {
@@ -76,6 +82,7 @@ namespace AppServiceCore.Repositories.MusicCollection
             }
 
             Debug.WriteLine($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
+            _logger.LogInformation($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
             return responseDto;
         }
 
