@@ -12,17 +12,29 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AppServiceCore.Repositories.MusicCollection
 {
     public class MusicCollectionRepository : IMusicCollectionRepository
     {
-        private List<MusicCollectionBandResult>? _bandsByBandNameResult;  // Persistent field
-        private IEnumerable<MusicCollectionBandDto>? _nonAsyncDto;        // Persistent field        
+        // Class-level fields used to persist variables while remote debugging Azure Web App.
+        // ======================================================================================
+        //   Note: Since class instance is transient (reference ServiceCollectionExtensions.cs)
+        //         each request will have its own instance of the class-level fields, so there
+        //         is no issue with overwriting data between concurrent calls.  But, if service
+        //         is registered as singleton or scoped, then concurrent requests may overwrite
+        //         the field values.
+        // ======================================================================================
+        //private List<MusicCollectionBandResult>? _bandsByBandNameResult;    // Used for debugging GetBandsByBandNameAsync()
+        private static AsyncLocal<List<MusicCollectionBandResult>> _bandsByBandNameResult = new();
+
+        //private List<MusicCollectionBandDto>? _bandsByBandNameResponseDto;  // Used for debugging GetBandsByBandNameAsync()
+
 
         private readonly IDbTransactionService _dbTransactionService;
-        private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.AppLogger);
+        //private readonly ILogger _logger = AppLogger.GetLogger(LoggerCategoryType.AppLogger);
 
         private readonly IAutoTypeMapper<MusicCollectionBandResult, MusicCollectionBandDto> _bandResultToBandDtoMapper;
         private readonly IAutoTypeMapper<MusicCollectionBandDto, AppDomainEntities.Entities.Band> _bandDtoToBandEntityMapper;
@@ -64,52 +76,15 @@ namespace AppServiceCore.Repositories.MusicCollection
                 return responseDto;
             }
 
-            // var bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
-            _bandsByBandNameResult = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+            // Save result to private class level variable, so it can be inspected durning remote debugging of Azure Web App
+            _bandsByBandNameResult.Value = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
 
-            // Ensure the result is fully materialized before mapping
-            var mappedBands = _bandsByBandNameResult.ToList();
-            Debug.WriteLine($"mappedBands After ToList() : {JsonConvert.SerializeObject(mappedBands)}");
-            _logger.LogInformation($"mappedBands After ToList() : {JsonConvert.SerializeObject(mappedBands)}");
+            //Debug.WriteLine($"_bandsByBandNameResult : {JsonConvert.SerializeObject(_bandsByBandNameResult)}");
+            //_logger.LogInformation($"_bandsByBandNameResult : {JsonConvert.SerializeObject(_bandsByBandNameResult)}");
 
-            var debugBands = mappedBands.ToList();
-            Debug.WriteLine($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
-            _logger.LogInformation($"debugBands : {JsonConvert.SerializeObject(mappedBands)}");
-
-            if (mappedBands != null) 
+            if (_bandsByBandNameResult != null) 
             {
-                foreach (var band in mappedBands)
-                {
-                    responseDto.Add(_bandResultToBandDtoMapper.Map(band));
-                }
-            }
-
-            Debug.WriteLine($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
-            _logger.LogInformation($"After Mapping: {JsonConvert.SerializeObject(responseDto)}");
-
-            // var nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName).ToList();
-            _nonAsyncDto = this.GetBandsByBandNameSync(dbContext, bandName).ToList();
-            Debug.WriteLine($"nonAsyncDto: {JsonConvert.SerializeObject(_nonAsyncDto)}");
-            _logger.LogInformation($"nonAsyncDto: {JsonConvert.SerializeObject(_nonAsyncDto)}");
-
-            return responseDto;
-        }
-
-        public IEnumerable<MusicCollectionBandDto> GetBandsByBandNameSync(MusicCollectionDbContext dbContext, string bandName)
-        {
-            var responseDto = new List<MusicCollectionBandDto>();
-
-            if (string.IsNullOrWhiteSpace(bandName))
-            {
-                return responseDto;
-            }
-
-            List<MusicCollectionBandResult> bandsByBandNameResult = dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToList();
-            _logger.LogInformation($"Bands Result: {JsonConvert.SerializeObject(bandsByBandNameResult)}");
-
-            if (bandsByBandNameResult != null)
-            {
-                foreach (var band in bandsByBandNameResult)
+                foreach (var band in _bandsByBandNameResult.Value)
                 {
                     responseDto.Add(_bandResultToBandDtoMapper.Map(band));
                 }

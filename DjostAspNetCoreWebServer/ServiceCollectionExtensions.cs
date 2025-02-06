@@ -123,7 +123,13 @@ namespace DjostAspNetCoreWebServer
                                         continue;
                                     }
 
-                                    // Register as Transient : create new instance every time requested
+                                    // Register as Transient : create new instance every time requested.
+                                    // ================================================================================
+                                    //   If changed to AddScoped or AddSingleton the possibility of concurrent 
+                                    //   request issues may exist.  If any class-level fields are used to persist
+                                    //   variables (for example, for remote debugging of Azure Web Apps), concurrent
+                                    //   requests may overwrite the field values.
+                                    // ================================================================================
                                     services.AddTransient(interfaceType, implementationType);
 
                                     // TODO : Support AddScoped and AddSingleton
