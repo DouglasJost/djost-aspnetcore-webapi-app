@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,18 +20,25 @@ namespace AppServiceCore.Repositories.MusicCollection
 {
     public class MusicCollectionRepository : IMusicCollectionRepository
     {
-        // Class-level fields used to persist variables while remote debugging Azure Web App.
-        // ======================================================================================
-        //   Note: Since class instance is transient (reference ServiceCollectionExtensions.cs)
-        //         each request will have its own instance of the class-level fields, so there
-        //         is no issue with overwriting data between concurrent calls.  But, if service
-        //         is registered as singleton or scoped, then concurrent requests may overwrite
-        //         the field values.
-        // ======================================================================================
-
+        // Class-level fields used when remote debugging Azure Web App.
+        // ========================================================================================================
+        //   https://www.linkedin.com/pulse/asynclocalt-net-solution-shared-state-issues-code-madhan-kumar-66qqc/
+        // ========================================================================================================
         #if DEBUG
-        private static AsyncLocal<List<MusicCollectionBandResult>> _bandsByBandNameDbResult = new();
-        private static AsyncLocal<List<MusicCollectionBandDto>> _bandsByBandNameResponseDto = new ();  
+        private static AsyncLocal<List<MusicCollectionBandResult>> _bandsByBandNameDbResult = new AsyncLocal<List<MusicCollectionBandResult>>();
+        private static AsyncLocal<List<MusicCollectionBandDto>> _bandsByBandNameResponseDto = new AsyncLocal<List<MusicCollectionBandDto>>();
+        
+        private static AsyncLocal<Band?> _bandDbResult = new AsyncLocal<Band?>();
+        private static AsyncLocal<MusicCollectionBandDto> _bandResponseDto = new AsyncLocal<MusicCollectionBandDto>();
+
+        private static AsyncLocal<List<MusicCollectionAlbumResult>> _albumsByBandIdDbResult = new AsyncLocal<List<MusicCollectionAlbumResult>>();
+        private static AsyncLocal<List<MusicCollectionBandAlbumsDto>> _albumsByBandIdResponseDto = new AsyncLocal<List<MusicCollectionBandAlbumsDto>>();
+
+        private static AsyncLocal<List<MusicCollectionBandArtistResult>> _artistsByBandIdDbResult = new AsyncLocal<List<MusicCollectionBandArtistResult>>();
+        private static AsyncLocal<List<MusicCollectionBandArtistsDto>> _artistsByBandIdResponseDto = new AsyncLocal<List<MusicCollectionBandArtistsDto>>();
+
+        private static AsyncLocal<List<MusicCollectionSongsByAlbumResult>> _songsByAlbumIdDbResult = new AsyncLocal<List<MusicCollectionSongsByAlbumResult>>();
+        private static AsyncLocal<List<MusicCollectionAlbumSongsDto>> _songsByAlbumIdResponseDto = new AsyncLocal<List<MusicCollectionAlbumSongsDto>>();
         #endif
 
         private readonly IDbTransactionService _dbTransactionService;
@@ -108,6 +116,9 @@ namespace AppServiceCore.Repositories.MusicCollection
             var bandEntity = await dbContext.Bands
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.BandId == bandId);
+            #if DEBUG
+                _bandDbResult.Value = bandEntity;
+            #endif
 
             if (bandEntity == null)
             {
@@ -115,6 +126,10 @@ namespace AppServiceCore.Repositories.MusicCollection
             }
 
             var responseDto = _bandEntityToBandDtoMapper.Map(bandEntity);
+            #if DEBUG
+                _bandResponseDto.Value = responseDto;
+            #endif
+
             return responseDto;
         }
 
@@ -131,6 +146,10 @@ namespace AppServiceCore.Repositories.MusicCollection
                 return new List<MusicCollectionBandAlbumsDto>();
             }
 
+            #if DEBUG
+                _albumsByBandIdDbResult.Value = albumsResult;
+            #endif
+
             List<MusicCollectionBandAlbumsDto> bandAlbumsDto = albumsResult
                 .GroupBy(ar => new { ar.BandId, ar.BandName })
                 .Select(group => new MusicCollectionBandAlbumsDto
@@ -139,7 +158,11 @@ namespace AppServiceCore.Repositories.MusicCollection
                     BandName = group.Key.BandName,
                     Albums = group.Select(album => _albumResultToAlbumDtoMapper.Map(album)).ToList()
                 }).ToList();
-            
+
+            #if DEBUG
+                _albumsByBandIdResponseDto.Value = bandAlbumsDto;
+            #endif
+
             return bandAlbumsDto;
         }
 
@@ -151,6 +174,14 @@ namespace AppServiceCore.Repositories.MusicCollection
             }
 
             var bandArtistsResult = await dbContext.Database.SqlQuery<MusicCollectionBandArtistResult>($"GetArtistsByBandId {bandId}").ToListAsync();
+            if (bandArtistsResult == null || bandArtistsResult.Count <= 0)
+            {
+                return new List<MusicCollectionBandArtistsDto>();
+            }
+
+            #if DEBUG
+                _artistsByBandIdDbResult.Value = bandArtistsResult;
+            #endif
 
             List<MusicCollectionBandArtistsDto> bandArtistsDto = bandArtistsResult
                 .GroupBy(bar => new { bar.BandId, bar.BandName })
@@ -160,6 +191,10 @@ namespace AppServiceCore.Repositories.MusicCollection
                     BandName = group.Key.BandName,
                     Artists = group.Select(artist => _artistResultToArtistDtoMapper.Map(artist)).ToList()
                 }).ToList();
+
+            #if DEBUG
+                _artistsByBandIdResponseDto.Value = bandArtistsDto;
+            #endif
 
             return bandArtistsDto;
         }
@@ -172,7 +207,15 @@ namespace AppServiceCore.Repositories.MusicCollection
             }
 
             var albumSongsResult = await dbContext.Database.SqlQuery<MusicCollectionSongsByAlbumResult>($"GetSongsByAlbumId {albumId}").ToListAsync();
-            
+            if (albumSongsResult == null || albumSongsResult.Count <= 0)
+            {
+                return new List<MusicCollectionAlbumSongsDto>();
+            }
+
+            #if DEBUG
+                _songsByAlbumIdDbResult.Value = albumSongsResult;
+            #endif
+
             List<MusicCollectionAlbumSongsDto> albumSongsDto = albumSongsResult
                 .GroupBy(asr => new { asr.AlbumId, asr.AlbumTitle })
                 .Select(group => new MusicCollectionAlbumSongsDto
@@ -181,6 +224,10 @@ namespace AppServiceCore.Repositories.MusicCollection
                     AlbumTitle = group.Key.AlbumTitle,
                     Songs = group.Select(song => _songsByAlbumResultToSongDtoMapper.Map(song)).ToList()
                 }).ToList();
+
+            #if DEBUG
+                _songsByAlbumIdResponseDto.Value = albumSongsDto;
+            #endif
 
             return albumSongsDto;
         }
@@ -291,8 +338,5 @@ namespace AppServiceCore.Repositories.MusicCollection
 
             return albumIds;
         }
-
-
-
     }
 }

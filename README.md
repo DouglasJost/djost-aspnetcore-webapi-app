@@ -101,3 +101,5 @@ The ASP.NET Core WebAPI application that I wrote includes the following:
 * Updated GitHub actions workflow file to either build and publish Debug or Release based on GitHub repository secret variable BUILD_CONFIGURATION.
 
 * Disabled optimizations and enable full debugging for debug builds.
+
+* Added AsyncLocal<T> class-level fields for db GET methods to allow remote debugging of Azure Web App.
