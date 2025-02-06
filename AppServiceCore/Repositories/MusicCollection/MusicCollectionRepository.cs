@@ -27,10 +27,8 @@ namespace AppServiceCore.Repositories.MusicCollection
         //         is registered as singleton or scoped, then concurrent requests may overwrite
         //         the field values.
         // ======================================================================================
-        //private List<MusicCollectionBandResult>? _bandsByBandNameResult;    // Used for debugging GetBandsByBandNameAsync()
-        private static AsyncLocal<List<MusicCollectionBandResult>> _bandsByBandNameResult = new();
-
-        //private List<MusicCollectionBandDto>? _bandsByBandNameResponseDto;  // Used for debugging GetBandsByBandNameAsync()
+        private static AsyncLocal<List<MusicCollectionBandResult>> _bandsByBandNameDbResult = new();
+        private static AsyncLocal<List<MusicCollectionBandDto>> _bandsByBandNameResponseDto = new ();  
 
 
         private readonly IDbTransactionService _dbTransactionService;
@@ -69,28 +67,25 @@ namespace AppServiceCore.Repositories.MusicCollection
 
         public async Task<IEnumerable<MusicCollectionBandDto>> GetBandsByBandNameAsync(MusicCollectionDbContext dbContext, string bandName)
         {
-            var responseDto = new List<MusicCollectionBandDto>();
-
+            _bandsByBandNameResponseDto.Value = new List<MusicCollectionBandDto>();
             if (string.IsNullOrWhiteSpace(bandName))
             {
-                return responseDto;
+                return _bandsByBandNameResponseDto.Value;
             }
 
-            // Save result to private class level variable, so it can be inspected durning remote debugging of Azure Web App
-            _bandsByBandNameResult.Value = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+            _bandsByBandNameDbResult.Value = await dbContext.Database.SqlQuery<MusicCollectionBandResult>($"GetBandsByBandName {bandName}").ToListAsync();
+            //Debug.WriteLine($"_bandsByBandNameDbResult : {JsonConvert.SerializeObject(_bandsByBandNameDbResult)}");
+            //_logger.LogInformation($"_bandsByBandNameDbResult : {JsonConvert.SerializeObject(_bandsByBandNameDbResult)}");
 
-            //Debug.WriteLine($"_bandsByBandNameResult : {JsonConvert.SerializeObject(_bandsByBandNameResult)}");
-            //_logger.LogInformation($"_bandsByBandNameResult : {JsonConvert.SerializeObject(_bandsByBandNameResult)}");
-
-            if (_bandsByBandNameResult != null) 
+            if (_bandsByBandNameDbResult != null && _bandsByBandNameDbResult.Value != null) 
             {
-                foreach (var band in _bandsByBandNameResult.Value)
+                foreach (var band in _bandsByBandNameDbResult.Value)
                 {
-                    responseDto.Add(_bandResultToBandDtoMapper.Map(band));
+                    _bandsByBandNameResponseDto.Value.Add(_bandResultToBandDtoMapper.Map(band));
                 }
             }
 
-            return responseDto;
+            return _bandsByBandNameResponseDto.Value;
         }
 
         public async Task<MusicCollectionBandDto?> GetBandByBandIdAsync(MusicCollectionDbContext dbContext, Guid bandId)
